@@ -41,7 +41,10 @@ for file in os.listdir(my_dir):
                     new_profile.append(profile_counter)
                     new_profile.append(a.string)
                 elif "recCard__age" in a["class"]:
-                    new_profile.append(int(a.string[2:]))
+                    if bool(a.string):
+                        new_profile.append(int(a.string[2:]))
+                    else:
+                        new_profile.append(a.string)
                 elif "Fz($ms)" in a["class"] or " W(100%)" in a["class"] or "D(b)" in a["class"]:
                     new_profile.append(a.string)
 if new_profile:
@@ -58,7 +61,7 @@ for b in like_list:
 suitor_list = []
 for c in all_entries:
     suitor = [c]
-    suitor.extend(all_entries[c][-2])
+    suitor.extend(all_entries[c][1])
     suitor_list.append(suitor)
 #    print(suitor)
 
