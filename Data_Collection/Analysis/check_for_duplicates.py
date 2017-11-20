@@ -4,8 +4,10 @@ Created on Thu Nov  9 20:33:49 2017
 
 @author: kaok
 """
-
-from html.parser import HTMLParser
+#set PYTHONPATH=%PYTHONPATH%; C:/Users/Jennifer/Documents/Berkeley/W241/Experiment/Data_Collection/MD/Male_original/Antonio
+#%cd C:\Users\Jennifer\Documents\Berkeley\W241\Experiment\Data_Collection\MD\Male_original\Antonio
+#%pwd
+from html import *
 from bs4 import BeautifulSoup
 import os
 import pandas as pd
@@ -116,8 +118,8 @@ def check_for_duplicates(directory):
     #return unique_suitors, duplicate_suitors, suitor_df, all_entries
     return unique_suitors, duplicate_suitors
 	
-
-unique_suitors, duplicate_suitors = check_for_duplicates(os.getcwd())
+male_city_names = []
+unique_suitors, duplicate_suitors = check_for_duplicates("C:\\Users\\Jennifer\\Documents\\Berkeley\\W241\\Experiment\\Data_Collection\\MD\\Male_original\\Phoenix") 
 
 duplicate_suitors = pd.DataFrame(duplicate_suitors)
 total_duplicates = 0
