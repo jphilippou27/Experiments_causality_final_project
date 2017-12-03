@@ -1,0 +1,40 @@
+---
+title: "Dating Experiment"
+author: "Kalvin, Dan, and Jennifer"
+date: "December 3, 2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("~/Berkeley/W241/Experiment/Final_Deliverables/final_paper_WIP")
+```
+##Experimental Design
+###Research Design (using ROXO grammar)
+
+
+
+###Randomization engineering
+
+
+
+###Experimental materials (e.g. treatment materials)
+
+
+###Measurement of variables
+
+
+###Modeling choices
+calculation of statistical power
+
+##Experiment Results
+In text description of your results
+Figures and tables that support your in text description
+Clean, clear, well articulated relationships between your theory, your hypotheses, the numbers that your models produce, and the figures you present
+
+
