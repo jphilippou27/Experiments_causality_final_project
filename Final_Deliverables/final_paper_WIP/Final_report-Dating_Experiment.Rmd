@@ -20,10 +20,35 @@ setwd("~/Berkeley/W241/Experiment/Final_Deliverables/final_paper_WIP")
 
 
 ###Randomization engineering
+In order to effectively deliver the treatment variable, showing the profile to a limited audience of potential suitors was paramount. To elaborate on that point, should a potential suitor see the profile change from "MD" to "BS" that would not only ruin the data point, but also risk the injured party flagging the account to the administrators and terminating the experiment prematurely. Fortunately, the premium Tinder account enabled the research team to control who had access to the profile so only the one hundred individuals in each city selected for that week's treatment were exposed; very effectively reducing potential spillover.
 
+Additionally, Tinder restrict users from seeing repeat profiles to prevent communication between people who previously interacted unsuccessfully, making the trials independent. Each week a new randomly select batch of ladies and gentleman were swiped on and put into the experiment. The potential suitors have an equal probability of receiving any given treatment (a bit of a stretch.?).
 
 
 ###Experimental materials (e.g. treatment materials)
+Objectively measuring individual's success in life is ambiguous and difficult, but a reasonably good proxy for research purposes could be educational attainment.  As the graph below indicates, on average there is a positive association between higher education and income levels. Other benefits of education include...  
+
+-more on Reason for focus on educational attainment over job title/institution?
+
+```{r}
+degree = c("Secondary Education", "Associate's Degree","Bachelor's Degree","Master's Degree", "Research Doctorate","Doctor of Law", "MBA", "Doctor of Medicine" )
+salary = c(51500,57100,79800,87700,94100,107000,118300,161200)
+
+df_treatments = cbind(degree,salary)
+hist(df_treatments$salary)
+```
+
+The potential suitors were shown a profile that either read: "MD", "PhD", "BS" or the field to provide education information was left blank. A sample profile can be seen below.
+
+```{r}
+
+```
+
+
+
+
+The research team was particularly interested in the difference between the impact of having a Medical Degree versus having a Research Degree. Both degrees require about five years to obtain, however there is significant difference in earnings potential.
+
 
 
 ###Measurement of variables
