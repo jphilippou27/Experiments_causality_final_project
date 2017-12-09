@@ -8,11 +8,15 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+library(knitr)#added by Kalvin to make tables
+library(kableExtra)#added by Kalvin to make tables (having issues getting it to work)
+
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-setwd("~/Berkeley/W241/Experiment/Final_Deliverables/final_paper_WIP")
+#setwd("~/Berkeley/W241/Experiment/Final_Deliverables/final_paper_WIP")#Jen's working directory
+setwd("C:/MIDS/W241/final_project/Final Paper")#Kalvin's working directory
 ```
 ##Experimental Design
 ###Research Design (using ROXO grammar)
@@ -35,7 +39,11 @@ degree = c("Secondary Education", "Associate's Degree","Bachelor's Degree","Mast
 salary = c(51500,57100,79800,87700,94100,107000,118300,161200)
 
 df_treatments = cbind(degree,salary)
-hist(df_treatments$salary)
+#hist(df_treatments$salary)#Jen's original barplot of salaries
+
+#I couldn't get the above histogram command to work ("Error in df_treatment$salary : $ operator is invalid for atomic vectors")
+#Is this what you're trying to do?
+barplot(as.numeric(df_treatments[,"salary"]), main="Salary by Education Level", xlab="Education", ylab="Salary ($)", names.arg=df_treatments[,"degree"])
 ```
 
 The potential suitors were shown a profile that either read: "MD", "PhD", "BS" or the field to provide education information was left blank. A sample profile can be seen below.
@@ -52,6 +60,63 @@ The research team was particularly interested in the difference between the impa
 
 
 ###Measurement of variables
+As discussed previously, the treatment in this experiment is the test profile's exposure of a given education level to a potential suitor, and the outcome is whether or not the suitor matches with the test profile.  When applying an education level treatment to the test profile, the measured test subject covariates include its age, sex, and location, and the measured suitor covariates include age, sex, whether or not school information is provided, whether or not job information is provided, and whether or not instagram photos are provided (and their count, if so).  These variables are described in table \textbf{XX} below.
+
+```{r}
+#(kalvin) i tried to use kable and kableExtra to format the table, but i'm having trouble using kableExtra
+#(kalvin) i might try a different package later
+
+column_names <- c("Variable", "Variable Type", "Source", "Description / Possible Values")
+variables <- c("test profile education level", "suitor profile match", "test profile sex", 
+               "test profile location", "suitor age", "suitor school***", "suitor job***", 
+               "suitor instagram***", "number of instagram photos***")
+variable_type <- c("treatment", "outcome", "covariate", "covariate", "covariate", 
+                   "covariate", "covariate", "covariate", "covariate")
+source <- c("test profile", "Tinder application", "test profile", "test profile", 
+            "suitor source code", "suitor source code", "suitor source code", 
+            "suitor source code", "suitor source code")
+description <- c("4 possible values*: No education listed (control), Bachelor's, MD, PhD", 
+                 "2 possible values: match or no match", 
+                 "2 possible values: female or male", 
+                 "8 possible values: Chicago, Houston, Los Angeles, New York, Philadelphia, Phoenix, San Antonio, San Diego", 
+                 "Due to the filters set in the test profiles, this variable can range from 24 - 34 years.", 
+                 "2 possible values: school information was detected or not", 
+                 "2 possible values: job information was detected or not", 
+                 "2 possible values: suitor profile included an instagram link or not", 
+                 "if a suitor profile contained a link to an instagram account, this variable is the number of photos in the account")
+variables_table <- matrix(c(variables, variable_type, source, description), nrow=length(variables))
+#variables_table.app <- cbind(variables_table, source)
+colnames(variables_table) <- column_names
+#kable(variables_table, rownames=FALSE, padding=4)
+#kable(variables_table, fontsize = 8, escape=FALSE, format.args=c(width=2), booktabs=TRUE)
+kable(variables_table, fontsize = 6, caption="Table XX: Description of Variables") %>%
+  kable_styling(bootstrap_options = c("striped","responsive"), full_width = FALSE)
+  #kable_styling(bootstrap_options = c("striped","responsive")) %>%
+  #column_spec(4, width="10em")
+```
+\* The initial experimental plan also included the 'Associates' education level as a treatment condition, however, technical issues at the start of the experiment prevented proper execution of the 'PhD' education level treatment, so the 'PhD' education level treatment was repeated and the 'Associates' education level treatment was skipped.
+
+\** The test profile age was an originally planned covariate, but due to time constraints, only one age was used for the entire experiment.
+
+\*** These variables are believed to be only partially observed-- see Section \textbf{XX} for further details.
+
+
+_Issues with Measurement of Outcome_
+
+After swiping right on a suitor, the Tinder application only provides notification if that suitor likes the test profile in return, and does not provide an indication of whether or not a suitor actually saw the profile or if the suitor disliked the test profile.  Our experiment therefore contains some rate of non-compliance and we are unfortunately unable to determine the compliance rate-- our estimated average treatment effect is thus the effect of the intent to treat.
+
+
+_Issues with Measurement of Covariates_
+
+The structure of the relevant source code in the Tinder browser interface is such that it contains a link to a suitor's profile image (which we use as a unique identifier for that suitor), the suitor's name, the suitor's age, and finally a maximum of two additional details that may include any combination of school information, job information, and instagram information.
+
+It is known that a Tinder profile may display all three of these pieces of information, but none of the ## source codes collected contained more than two details.  It is highly unlikely that amongst the ## suitors encountered in the experiment, none displayed more than two of these details, so we believe that school information, job information, and instagram information are only partially observed, and without more in-depth examination of each suitor profile at the time of experiment execution, our analysis is unable to fully determine the education and job status/level, as well as instagram information, for each suitor.  Due to time constraints, thorough examination of each profile was unfortunately not an option-- we were required to use an automated swiping method which acquired covariate information from source code.  It is also known that a Tinder profile may additionally display the suitor's distance and favorite spotify songs, but none of this information was present in the suitor source codes acquired during the experiment, and these two covariates were thus unobserved.
+
+The source code indicates which suitor details are the profile image, the name, and the age, but does not indicate which details are school, job, or instagram information.  Our data collection process searches the text of these details to make a best guess as to what type of detail it is (instagram information is easily identified, but not school or job information).  So for some of the school and job details that were collected, it could not be determined whether the detail represented education or employment.
+
+
+_Data Pre-processing_
+Since the non-binary variables are categorical, they were binarized using indicator variables for each category...
 
 
 ###Modeling choices
