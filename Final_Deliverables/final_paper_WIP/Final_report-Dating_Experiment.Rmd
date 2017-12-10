@@ -3,6 +3,7 @@ title: "Dating Experiment"
 author: "Kalvin, Dan, and Jennifer"
 date: "December 3, 2017"
 output:
+  word_document: default
   pdf_document: default
   html_document: default
 ---
@@ -15,24 +16,31 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-#setwd("~/Berkeley/W241/Experiment/Final_Deliverables/final_paper_WIP")#Jen's working directory
-setwd("C:/MIDS/W241/final_project/Final Paper")#Kalvin's working directory
+#setwd("~/Berkeley/W241/Experiment/Final_Deliverables/final_paper_WIP")#Jen's personal comp
+setwd("~/Personal/Grad SChool/Courses/w241/Experiment/w241_final_project/Final_Deliverables/final_paper_WIP") #Jen's work laptop
+#setwd("C:/MIDS/W241/final_project/Final Paper")#Kalvin's working directory
 ```
 ##Experimental Design
 ###Research Design (using ROXO grammar)
 
+```{python}
+
+```
 
 
 ###Randomization engineering
-In order to effectively deliver the treatment variable, showing the profile to a limited audience of potential suitors was paramount. To elaborate on that point, should a potential suitor see the profile change from "MD" to "BS" that would not only ruin the data point, but also risk the injured party flagging the account to the administrators and terminating the experiment prematurely. Fortunately, the premium Tinder account enabled the research team to control who had access to the profile so only the one hundred individuals in each city selected for that week's treatment were exposed; very effectively reducing potential spillover.
 
-Additionally, Tinder restrict users from seeing repeat profiles to prevent communication between people who previously interacted unsuccessfully, making the trials independent. Each week a new randomly select batch of ladies and gentlemen were swiped on and put into the experiment. The potential suitors have an equal probability of receiving any given treatment (a bit of a stretch.?).
+Gathering a larger sample of profiles gave our analysis more power and confidence in the trends observed from the data <<POWER CALC>>. The pilot demonstrated that mannually copy and paste the details from each suitor's profile prohibited collecting a larger number of profiles. It took about three hours to gather four hundred profiles, meaning just over 2 minutes per profile. The use of automation was a very effective tool that enabled the collection of over five thousand suitor profiles in a four week period, which would have taken one hundred eight five hours by hand. Luckily, the website version of Tinder exactly matched the mobile phone version greatly streamlining and standardizing the data collection approach. 
 
-To help demonstrate the balance in treatment assignment, the distribution of suitor ages for each treatment condition are displayed in figures XX-XX below.
+The research team wrote scripts in AutoHotKey (PC) and Maestro (the MAC equivalent) that control the operating system of the computer. The code would open up Tinder and navigate to developers' tools where the website's Javascript rendered soruce code (the HTML behind the webpage) was available. The source code listed the suitors name, age, a unique photo source path (very helpful for data validation later), and two details about the profile. After collecting and storing the source code in the appropriate folder that designated the city and treatment level, the code would automatically right swipe on the profile collect. 
+
+Tinder restricts users from seeing repeat profiles to prevent communication between people who previously interacted unsuccessfully, making the trials independent. Each week a new randomly select batch of ladies and gentlemen were swiped on and put into the experiment. Any user of the Tinder application is subject to the behind the scences algorithm that serves up potential profiles; both the test male and female profiles, along with the profiles of the general Tinder user.
+
+To further enhance the level of randomness within treatment assignment, every other profile was rejected from the experiment. Given more time, the treatments could be delivered in alternative orders to help determine if the algorithm modifies the suitor population based on features of the profile. As the experiment was constrained to a five week window, the collection of covariate distributions augments the research team's understanding of the mechanisms driving tinder matches. For example, to help demonstrate the balance in treatment assignment, the distribution of suitor ages for each treatment condition are displayed in figures XX-XX below.
 
 Figure XX (will add plots after they're finalized-- please check EDA google doc)
 
-It is interesting to see that the age distribution has a right skew for all treatment conditions, and it is unclear that depending on Tinder to select suitors is truly random-- it could be the case that Tinder selects suitors based on the age set in the test profile, and it could also be the case that the general population of Tinder users is centered around the mid-20s age range.  But the consistency of this distribution across all conditions indicates that there was indeed an equal probability of receiving a given treatment condition, at least amongst the suitors selected by Tinder.
+It is interesting to see that the age distribution has a right skew for all treatment conditions, and it is unclear that depending on Tinder to select suitors is truly random-- it could be the case that Tinder selects suitors based on the age set in the test profile, and it could also be the case that the general population of Tinder users is centered around the mid-20s age range.  But the consistency of this distribution across all conditions indicates that there was indeed an equal probability of receiving a given treatment condition, at least amongst the suitors selected by Tinder. 
 
 The age distribution of suitors to the Male profile (female suitors) does seem to be centered approximately 2 years younger than that of suitors to the Female profile, and the skew appears to increase slightly with increasing education level.  However, statistical tests for the difference in average age by test condition yields a significant difference only between the male and female conditions (shown in figures XX-XX below), and its effect size is small-- approximately half a year.
 
@@ -41,6 +49,10 @@ The age distribution of suitors to the Male profile (female suitors) does seem t
 Objectively measuring individual's success in life is ambiguous and difficult, but a reasonably good proxy for research purposes could be educational attainment.  As the graph below indicates, on average there is a positive association between higher education and income levels. Other benefits of education include...  
 
 -more on Reason for focus on educational attainment over job title/institution?
+
+-treatment order MD, BS, noEdu, PhD.
+
+In order to effectively deliver the treatment variable, showing the profile to a limited audience of potential suitors was paramount. To elaborate on that point, should a potential suitor see the profile change from "MD" to "BS" that would not only ruin the data point, but also risk the injured party flagging the account to the administrators and terminating the experiment prematurely. Fortunately, the premium Tinder account enabled the research team to control who had access to the profile so only the one hundred individuals in each city selected for that week's treatment were exposed; very effectively reducing potential spillover.
 
 ```{r}
 degree = c("Secondary Education", "Associate's Degree","Bachelor's Degree","Master's Degree", "Research Doctorate","Doctor of Law", "MBA", "Doctor of Medicine" )
