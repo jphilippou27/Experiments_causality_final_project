@@ -1,0 +1,78 @@
+---
+title: "W241 Final Project EDA"
+author: 'Kalvin Kao'
+date: \today
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, results='hide'} 
+# load packages 
+library(lmtest)
+library(sandwich)
+library(multiwayvcov)
+library(data.table)
+library(foreign)
+```
+
+```{r}
+robustSEs <- function(my.model){
+  my.model$vcovHC <- vcovHC(my.model)
+  my.model.summary <- coeftest(my.model, my.model$vcovHC)
+  return(my.model.summary)
+}
+```
+
+```{r}
+#setwd('C:/MIDS/W241/final_project/Analysis')
+d1 <- fread('C:/MIDS/W241/final_project/Analysis/all_unique_suitors.csv')
+d1
+```
+
+\newpage
+### EDA
+```{r}
+sex.model <- lm(age ~ female, data=d1)
+robustSEs(sex.model)
+```
+
+```{r}
+education_level.model <- lm(age ~ bs + md + phd, data=d1)
+robustSEs(education_level.model)
+```
+
+```{r}
+city.model <- lm(age ~ houston + losangeles + newyork + philadelphia + phoenix + sanantonio + sandiego, data=d1)
+robustSEs(city.model)
+```
+
+
+
+\newpage
+### Scratchwork
+
+```{r}
+noedu.model <- lm(age ~ noedu, data=d1)
+robustSEs(noedu.model)
+```
+
+```{r}
+bs.model <- lm(age ~ bs, data=d1)
+robustSEs(bs.model)
+```
+
+```{r}
+md.model <- lm(age ~ md, data=d1)
+robustSEs(md.model)
+```
+
+```{r}
+phd.model <- lm(age ~ phd, data=d1)
+robustSEs(phd.model)
+```
+
+## R Markdown

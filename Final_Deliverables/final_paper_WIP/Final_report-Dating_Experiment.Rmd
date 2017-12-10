@@ -26,7 +26,15 @@ setwd("C:/MIDS/W241/final_project/Final Paper")#Kalvin's working directory
 ###Randomization engineering
 In order to effectively deliver the treatment variable, showing the profile to a limited audience of potential suitors was paramount. To elaborate on that point, should a potential suitor see the profile change from "MD" to "BS" that would not only ruin the data point, but also risk the injured party flagging the account to the administrators and terminating the experiment prematurely. Fortunately, the premium Tinder account enabled the research team to control who had access to the profile so only the one hundred individuals in each city selected for that week's treatment were exposed; very effectively reducing potential spillover.
 
-Additionally, Tinder restrict users from seeing repeat profiles to prevent communication between people who previously interacted unsuccessfully, making the trials independent. Each week a new randomly select batch of ladies and gentleman were swiped on and put into the experiment. The potential suitors have an equal probability of receiving any given treatment (a bit of a stretch.?).
+Additionally, Tinder restrict users from seeing repeat profiles to prevent communication between people who previously interacted unsuccessfully, making the trials independent. Each week a new randomly select batch of ladies and gentlemen were swiped on and put into the experiment. The potential suitors have an equal probability of receiving any given treatment (a bit of a stretch.?).
+
+To help demonstrate the balance in treatment assignment, the distribution of suitor ages for each treatment condition are displayed in figures XX-XX below.
+
+Figure XX (will add plots after they're finalized-- please check EDA google doc)
+
+It is interesting to see that the age distribution has a right skew for all treatment conditions, and it is unclear that depending on Tinder to select suitors is truly random-- it could be the case that Tinder selects suitors based on the age set in the test profile, and it could also be the case that the general population of Tinder users is centered around the mid-20s age range.  But the consistency of this distribution across all conditions indicates that there was indeed an equal probability of receiving a given treatment condition, at least amongst the suitors selected by Tinder.
+
+The age distribution of suitors to the Male profile (female suitors) does seem to be centered approximately 2 years younger than that of suitors to the Female profile, and the skew appears to increase slightly with increasing education level.  However, statistical tests for the difference in average age by test condition yields a significant difference only between the male and female conditions (shown in figures XX-XX below), and its effect size is small-- approximately half a year.
 
 
 ###Experimental materials (e.g. treatment materials)
