@@ -11,13 +11,18 @@ output:
 ```{r setup, include=FALSE}
 library(knitr)#added by Kalvin to make tables
 library(kableExtra)#added by Kalvin to make tables (having issues getting it to work)
+library(lmtest)
+library(sandwich)
+library(multiwayvcov)
+library(data.table)
+library(foreign)
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, include = FALSE}
 #setwd("~/Berkeley/W241/Experiment/Final_Deliverables/final_paper_WIP")#Jen's personal comp
-setwd("~/Personal/Grad SChool/Courses/w241/Experiment/w241_final_project/Final_Deliverables/final_paper_WIP") #Jen's work laptop
+setwd("~/Personal/Grad SChool/Courses/w241/Experiment/") # w241_final_project/Final_Deliverables/final_paper_WIP") #Jen's work laptop
 #setwd("C:/MIDS/W241/final_project/Final Paper")#Kalvin's working directory
 ```
 ## Abstract
@@ -47,6 +52,17 @@ Self-presentation and self-disclosure are well studied aspects of the relational
 Somewhat contradicting prior research, 2010 research by Hitsch, Hortaçsu, and Airely found no evidence for strategic behavior.  Their research found strong same-race preferences among users, which did not differ across age, income, or education levels.  The study, however, did show gender differences in mate preferences, specifically that women had stronger preference for income and men had stronger preference for physical attributes.
 
 Our platform of interest, Tinder, has been the focus of a few published studies.  Gatter & Hodkinson found that "despite common stereotypes about those who use different types of online dating...no differences were found in motivations, suggesting that people may use both Online Dating Agencies and Tinder for similar reasons."  in specifying the motivations behind Tinder use, Sumter, Vandenbosch, and Ligtenberg found six motivating factors for use: Love, Casual Sex, Ease of Communication, Self-Worth Validation, Thrill of Excitement, and Trendiness.
+
+## Research Question
+
+## Hypothesis
+
+
+$$ 
+H_0 =&  \\
+H_1 =& 
+$$
+   
 
 ## Research Design (using ROXO grammar)
 Our experiment created two fictitious online profiles that mimicked actual user profiles on Tinder.  The profiles were of a male and a female, each 29 years of age.  The profiles included five pictures of each individual in various settings, the individual's name, age, level of education attainment, and a comment stating, "Moving in couple of weeks and looking forward to meeting new people!"
@@ -191,4 +207,118 @@ In text description of your results
 Figures and tables that support your in text description
 Clean, clear, well articulated relationships between your theory, your hypotheses, the numbers that your models produce, and the figures you present
 
+```{r, echo = FALSE}
+setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
+df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
+head(df)
+```
+### Exporatory Data Analysis 
+
+From Kavlin
+```{r}
+robustSEs <- function(my.model){
+  my.model$vcovHC <- vcovHC(my.model)
+  my.model.summary <- coeftest(my.model, my.model$vcovHC)
+  return(my.model.summary)
+}
+```
+
+
+```{r}
+sex.model <- lm(age ~ female, data=df)
+robustSEs(sex.model)
+education_level.model <- lm(age ~ bs + md + phd, data=df)
+robustSEs(education_level.model)
+city.model <- lm(age ~ houston + losangeles + newyork + philadelphia + phoenix + sanantonio + sandiego, data=df)
+robustSEs(city.model)
+```
+
+High Level Overview of Outcomes
+```{r, echo = FALSE}
+cnts = table(df$matches, df$female, dnn=c("Matches","Female Indicator"))
+addmargins(cnts)
+```
+
+```{r}
+cnts_treat = table(df$matches,df$treatment, dnn=c("Matches", "Treatment"))
+addmargins(cnts_treat)
+```
+
+
+
+## Models
+$$ 
+y_i = {\beta}_0 + {\beta}_1Z_i + e_i
+$$
+
+$$ 
+\begin{aligned}
+y_i =& Outcome \{ } match\\{ } count\{ } for\{ } ith \{ }unit \\
+{\beta}_0 =& intercept \\
+{\beta}_1Z_i =&
+e_i =& error term
+\end{aligned}
+$$
+
+Mean comparison
+```{r}
+
+```
+
+
+Caclulating the ATE:
+Control is in the intercept base the base (otherwise we would have problems with multicolinearity; same thing with including the male indicator)
+
+```{r}
+model_base = lm(matches ~ md + bs + phd  + female, data = df)
+summary(model_base)
+#plot(model_MD_base, which = c(1:5))
+```
+
+Test the hypothesis that the profile for our female is more effective, in terms of producing additional matches, than the male profile:
+```{r}
+model_gender = lm(matches ~ md + bs + phd + noedu + female + female*matches, data = df)
+summary(model_gender)
+#plot(model_MD_base, which = c(1:5))
+```
+^ compare with power test results 
+Location impact: (chicago is the base)
+```{r}
+df_female = subset(df, df$female == 1)
+model_location = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia , data = df_female)
+summary(model_location)
+```
+
+Placebo test:
+
+
+Added just in case we want to run the treatments separately:
+```{r, fig.width =12, results='asis'}
+library(stargazer)
+model_MD_base = lm(matches ~ md, data = df)
+model_BS_base = lm(matches ~ bs, data = df)
+model_noedu_base = lm(matches ~ noedu, data = df)
+model_PhD_base = lm(matches ~ phd, data = df)
+
+#Change type to "latex" for knitting to pdf
+stargazer(model_MD_base, model_BS_base, model_noedu_base, model_PhD_base,type = "text", report = "vcs*", single.row = F, column.labels = c("MD","BS", "No Edu", "PhD"), title ="Comparison of treatments")
+#cat("\n\n\\pagebreak\n")
+```
+## Age impact from Kavlin
+
+```{r}
+noedu.model <- lm(age ~ noedu, data=df_female)
+robustSEs(noedu.model)
+bs.model <- lm(age ~ bs, data=df_female)
+robustSEs(bs.model)
+md.model <- lm(age ~ md, data=df_female)
+robustSEs(md.model)
+phd.model <- lm(age ~ phd, data=df_female)
+robustSEs(phd.model)
+```
+
+
+```{r}
+
+```
 
