@@ -59,8 +59,11 @@ Our platform of interest, Tinder, has been the focus of a few published studies.
 
 
 $$ 
-H_0 =&  \\
-H_1 =& 
+H_0: {\delta}M_{MD} = M_{BS}  = M_{PhD} = M_{NoEdu} \\
+H_1: M_{MD} < M_{BS}  = M_{PhD} = M_{NoEdu} \\
+H_2: M_{MD} +   M_{BS} \\
+H_3: M_{BS} > M_{PhD} \\
+H_4: 
 $$
    
 
@@ -246,10 +249,7 @@ addmargins(cnts_treat)
 
 
 
-## Models
-$$ 
-y_i = {\beta}_0 + {\beta}_1Z_i + e_i
-$$
+
 
 $$ 
 \begin{aligned}
@@ -269,52 +269,57 @@ Mean comparison
 Caclulating the ATE:
 Control is in the intercept base the base (otherwise we would have problems with multicolinearity; same thing with including the male indicator)
 
-```{r}
-model_base = lm(matches ~ md + bs + phd  + female, data = df)
-summary(model_base)
-#plot(model_MD_base, which = c(1:5))
-```
+## Models
+$$ 
+y_i = {\beta}_0 + {\beta}_1Z_i + e_i \\
+Y_{Matches} = \beta_0 + \beta_1 MD + \beta_2 PhD + \beta_3 BS + \beta_4 female + \beta_5 female* MD + \beta_6 female*PhD  + \beta_7 female*BS  + e_i \\
+$$
 
 Test the hypothesis that the profile for our female is more effective, in terms of producing additional matches, than the male profile:
 ```{r}
-model_gender = lm(matches ~ md + bs + phd + noedu + female + female*matches, data = df)
+model_gender = lm(matches ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df)
 summary(model_gender)
 #plot(model_MD_base, which = c(1:5))
 ```
 ^ compare with power test results 
+
+WE CAN REMOVE THE VISUAL ON THE NEXT FEW REGRESSIONS I LEFT THEM IN CASE WE WANT TO TWEAK ANYTHING
 Location impact: (chicago is the base)
 ```{r}
 df_female = subset(df, df$female == 1)
-model_location = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia , data = df_female)
+model_location = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, data = df_female)
 summary(model_location)
 ```
+```{r}
+df_female = subset(df, df$female == 1)
+model_location2 = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +losangeles*md +losangeles*bs+losangeles*phd , data = df_female)
+summary(model_location2)
+```
 
-Placebo test:
 
+```{r}
+model_age = lm(matches ~ md + bs + phd  + age , data = df_female)
+summary(model_age)
+```
+
+```{r}
+model_details = lm(matches ~ md + bs + phd  +  num_ig + school + job, data = df_female)
+summary(model_details)
+```
+
+```{r}
+df_female = subset(df, df$female == 1)
+model_all = lm(matches ~ md + bs + phd  + female + age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia + num_ig + school + job  , data = df_female)
+summary(model_all)
+```
 
 Added just in case we want to run the treatments separately:
 ```{r, fig.width =12, results='asis'}
 library(stargazer)
-model_MD_base = lm(matches ~ md, data = df)
-model_BS_base = lm(matches ~ bs, data = df)
-model_noedu_base = lm(matches ~ noedu, data = df)
-model_PhD_base = lm(matches ~ phd, data = df)
 
 #Change type to "latex" for knitting to pdf
-stargazer(model_MD_base, model_BS_base, model_noedu_base, model_PhD_base,type = "text", report = "vcs*", single.row = F, column.labels = c("MD","BS", "No Edu", "PhD"), title ="Comparison of treatments")
+stargazer(model_gender, model_age, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
-```
-## Age impact from Kavlin
-
-```{r}
-noedu.model <- lm(age ~ noedu, data=df_female)
-robustSEs(noedu.model)
-bs.model <- lm(age ~ bs, data=df_female)
-robustSEs(bs.model)
-md.model <- lm(age ~ md, data=df_female)
-robustSEs(md.model)
-phd.model <- lm(age ~ phd, data=df_female)
-robustSEs(phd.model)
 ```
 
 
