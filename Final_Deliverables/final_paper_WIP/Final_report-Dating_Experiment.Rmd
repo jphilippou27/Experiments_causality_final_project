@@ -215,6 +215,19 @@ setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
 df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
 head(df)
 ```
+```{r}
+#removing missing values
+for(i in 1:ncol(df)){
+  x = df[,i]
+  if(is.character(df[,i])){
+    df[,i][is.na(x) | nchar(x) == 0] = 'not available'
+  } else if(is.numeric(df[,i])){
+    df[,i][is.na(x)] = 0.0001  # didn't want too small of a number because of scaling function later
+  }
+}
+```
+
+
 ### Exporatory Data Analysis 
 
 From Kavlin
@@ -295,11 +308,14 @@ df_female = subset(df, df$female == 1)
 model_location2 = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +losangeles*md +losangeles*bs+losangeles*phd , data = df_female)
 summary(model_location2)
 ```
-
+```{r}
+model_age = lm(matches ~ md + bs + phd  + age  , data = df_female)
+summary(model_age)
+```
 
 ```{r}
-model_age = lm(matches ~ md + bs + phd  + age , data = df_female)
-summary(model_age)
+model_ageInteraction = lm(matches ~ md + bs + phd  + age +  age*phd , data = df_female)
+summary(model_ageInteraction)
 ```
 
 ```{r}
@@ -318,10 +334,13 @@ Added just in case we want to run the treatments separately:
 library(stargazer)
 
 #Change type to "latex" for knitting to pdf
-stargazer(model_gender, model_age, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+stargazer(model_gender, model_ageInteraction, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
 
+```{r}
+anova(model_location, model_all)
+```
 
 ```{r}
 
