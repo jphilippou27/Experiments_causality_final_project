@@ -215,16 +215,11 @@ setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
 df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
 head(df)
 ```
+
+
 ```{r}
-#removing missing values
-for(i in 1:ncol(df)){
-  x = df[,i]
-  if(is.character(df[,i])){
-    df[,i][is.na(x) | nchar(x) == 0] = 'not available'
-  } else if(is.numeric(df[,i])){
-    df[,i][is.na(x)] = 0.0001  # didn't want too small of a number because of scaling function later
-  }
-}
+#changes missing values to something easier to delete (done later)
+df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
 ```
 
 
@@ -300,11 +295,11 @@ WE CAN REMOVE THE VISUAL ON THE NEXT FEW REGRESSIONS I LEFT THEM IN CASE WE WANT
 Location impact: (chicago is the base)
 ```{r}
 df_female = subset(df, df$female == 1)
-model_location = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, data = df_female)
+df_female = subset(df_female, df_female$age != 0.0001)
+model_location = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, complete.cases(T), data = df_female)
 summary(model_location)
 ```
 ```{r}
-df_female = subset(df, df$female == 1)
 model_location2 = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +losangeles*md +losangeles*bs+losangeles*phd , data = df_female)
 summary(model_location2)
 ```
@@ -314,18 +309,18 @@ summary(model_age)
 ```
 
 ```{r}
-model_ageInteraction = lm(matches ~ md + bs + phd  + age +  age*phd , data = df_female)
+model_ageInteraction = lm(matches ~ md + bs + phd  + age + age*md +age*bs+  age*phd , data = df_female)
 summary(model_ageInteraction)
 ```
 
 ```{r}
-model_details = lm(matches ~ md + bs + phd  +  num_ig + school + job, data = df_female)
+model_details = lm(matches ~ md + bs + phd  +  school + job, data = df_female)
 summary(model_details)
 ```
 
 ```{r}
 df_female = subset(df, df$female == 1)
-model_all = lm(matches ~ md + bs + phd  + female + age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia + num_ig + school + job  , data = df_female)
+model_all = lm(matches ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, complete.cases(T))
 summary(model_all)
 ```
 
@@ -334,7 +329,7 @@ Added just in case we want to run the treatments separately:
 library(stargazer)
 
 #Change type to "latex" for knitting to pdf
-stargazer(model_gender, model_ageInteraction, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+stargazer(model_gender, model_age, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
 
