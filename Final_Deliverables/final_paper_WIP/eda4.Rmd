@@ -1,0 +1,341 @@
+---
+title: "W241 Final Project EDA"
+author: 'Kalvin Kao'
+date: \today
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, results='hide'} 
+# load packages 
+library(lmtest)
+library(sandwich)
+library(multiwayvcov)
+library(data.table)
+library(foreign)
+library(xtable)
+library(stargazer)
+```
+
+```{r}
+robustSEs <- function(my.model){
+  my.model$vcovHC <- vcovHC(my.model)
+  my.model.summary <- coeftest(my.model, my.model$vcovHC)
+  return(my.model.summary)
+}
+```
+
+```{r}
+#setwd('C:/MIDS/W241/final_project/Analysis')
+df <- fread("Dating_experiment-Final_Project_DataFV.csv")
+head(df)
+```
+
+```{r}
+summary(df)
+```
+
+\newpage
+## EDA
+
+The randomization of our treatment assignment was dependent on Tinder's selection of suitors.  Since Tinder's algorithm for this selection is unknown and potentially complex, balance across the available covariates was examined to ensure that the experiment yields an apples-to-apples comparison.
+
+```{r echo=FALSE, message=FALSE}
+df$age_indicator <- 1.0*(!is.na(df$age))
+df$ig_indicator <- 1.0*(!is.na(df$num_ig))
+```
+
+### Missing Instagram Information
+
+Like school and job information, instagram information was missing from many of our suitor profiles.  However, it was easily detected when present in the source code since the format for an instagram detail was consistent across suitor profiles (of the form "X Instagram Photos").  One technical detail of the structure of suitor source codes is that school and job information took priority-- an instagram detail is only present when less than two school or job details are present.  Therefore, whether or not a profile's source code contains an instagram detail could be used to represent the amount of information a suitor chose to include in his or her profile-- the missingness of instagram details is thus checked for balance across experimental conditions.  Table XXX below shows the count of profiles with instagram information detected between the male and female test profiles.
+
+```{r results="asis", echo=FALSE, message=FALSE}
+missing.ig.female <- 100*(1-mean(df$ig_indicator[df$female==1]))
+missing.ig.male <- 100*(1-mean(df$ig_indicator[df$female==0]))
+#table(df[,c('female','ig_indicator')])
+total.female <- sum(df$female==1)
+total.male <- sum(df$female==0)
+num.ig.female <- sum(df$ig_indicator[df$female==1])
+num.ig.male <- sum(df$ig_indicator[df$female==0])
+
+column.names <- c("Gender", "Total Profiles", "Profiles with Instagram", "% Missing Instagram Info")
+column.1 <- c("Female", "Male")
+column.2 <- c(total.female, total.male)
+column.3 <- c(num.ig.female, num.ig.male)
+column.4 <- c(missing.ig.female, missing.ig.male)
+missing.ig.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
+colnames(missing.ig.table) <- column.names
+print(xtable(missing.ig.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+```
+
+```{r echo=FALSE, message=FALSE}
+ig.gender <- lm(ig_indicator ~ female, data=df)
+ig.gender.summary <- robustSEs(ig.gender)
+ig.gender.SEs <- c(ig.gender.summary[3], ig.gender.summary[4])
+```
+
+Table XXX below shows the count of profiles with instagram information detected between all treatment conditions.
+
+```{r results="asis", echo=FALSE, message=FALSE}
+missing.ig.noedu <- 100*(1-mean(df$ig_indicator[df$noedu==1]))
+missing.ig.bs <- 100*(1-mean(df$ig_indicator[df$bs==1]))
+missing.ig.md <- 100*(1-mean(df$ig_indicator[df$md==1]))
+missing.ig.phd <- 100*(1-mean(df$ig_indicator[df$phd==1]))
+total.noedu <- sum(df$noedu==1)
+total.bs <- sum(df$bs==1)
+total.md <- sum(df$md==1)
+total.phd <- sum(df$phd==1)
+num.ig.noedu <- sum(df$ig_indicator[df$noedu==1])
+num.ig.bs <- sum(df$ig_indicator[df$bs==1])
+num.ig.md <- sum(df$ig_indicator[df$md==1])
+num.ig.phd <- sum(df$ig_indicator[df$phd==1])
+
+column.names <- c("Education Level", "Total Profiles", "Profiles with Instagram", "% Missing Instagram Info")
+column.1 <- c("No Education", "BS", "MD", "PhD")
+column.2 <- c(total.noedu, total.bs, total.md, total.phd)
+column.3 <- c(num.ig.noedu, num.ig.bs, num.ig.md, num.ig.phd)
+column.4 <- c(missing.ig.noedu, missing.ig.bs, missing.ig.md, missing.ig.phd)
+missing.ig.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
+colnames(missing.ig.table) <- column.names
+print(xtable(missing.ig.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+```
+
+```{r echo=FALSE, message=FALSE}
+ig.treatment <- lm(ig_indicator ~ bs + md + phd, data=df)
+ig.treatment.summary <- robustSEs(ig.treatment)
+ig.treatment.SEs <- c(ig.treatment.summary[5], ig.treatment.summary[6], ig.treatment.summary[7], ig.treatment.summary[8])
+```
+
+Table XXX below shows the count of profiles with instagram information detected between all testing locations.
+
+```{r results="asis", echo=FALSE, message=FALSE}
+missing.ig.chicago <- 100*(1-mean(df$ig_indicator[df$chicago==1]))
+missing.ig.houston <- 100*(1-mean(df$ig_indicator[df$houston==1]))
+missing.ig.losangeles <- 100*(1-mean(df$ig_indicator[df$losangeles==1]))
+missing.ig.newyork <- 100*(1-mean(df$ig_indicator[df$newyork==1]))
+missing.ig.philadelphia <- 100*(1-mean(df$ig_indicator[df$philadelphia==1]))
+missing.ig.phoenix <- 100*(1-mean(df$ig_indicator[df$phoenix==1]))
+missing.ig.sanantonio <- 100*(1-mean(df$ig_indicator[df$sanantonio==1]))
+missing.ig.sandiego <- 100*(1-mean(df$ig_indicator[df$sandiego==1]))
+total.chicago <- sum(df$chicago==1)
+total.houston <- sum(df$houston==1)
+total.losangeles <- sum(df$losangeles==1)
+total.newyork <- sum(df$newyork==1)
+total.philadelphia <- sum(df$philadelphia==1)
+total.phoenix <- sum(df$phoenix==1)
+total.sanantonio <- sum(df$sanantonio==1)
+total.sandiego <- sum(df$sandiego==1)
+num.ig.chicago <- sum(df$ig_indicator[df$chicago==1])
+num.ig.houston <- sum(df$ig_indicator[df$houston==1])
+num.ig.losangeles <- sum(df$ig_indicator[df$losangeles==1])
+num.ig.newyork <- sum(df$ig_indicator[df$newyork==1])
+num.ig.philadelphia <- sum(df$ig_indicator[df$philadelphia==1])
+num.ig.phoenix <- sum(df$ig_indicator[df$phoenix==1])
+num.ig.sanantonio <- sum(df$ig_indicator[df$sanantonio==1])
+num.ig.sandiego <- sum(df$ig_indicator[df$sandiego==1])
+
+column.names <- c("City", "Total Profiles", "Profiles with Instagram", "% Missing Instagram Info")
+column.1 <- c("Chicago", "Houston", "Los Angeles", "New York", "Phildelphia", "Phoenix", "San Antonio", "San Diego")
+column.2 <- c(total.chicago, total.houston, total.losangeles, total.newyork, 
+              total.philadelphia, total.phoenix, total.sanantonio, total.sandiego)
+column.3 <- c(num.ig.chicago, num.ig.houston, num.ig.losangeles, num.ig.newyork, 
+              num.ig.philadelphia, num.ig.phoenix, num.ig.sanantonio, num.ig.sandiego)
+column.4 <- c(missing.ig.chicago, missing.ig.houston, missing.ig.losangeles, missing.ig.newyork, 
+              missing.ig.philadelphia, missing.ig.phoenix, missing.ig.sanantonio, missing.ig.sandiego)
+
+missing.ig.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
+colnames(missing.ig.table) <- column.names
+print(xtable(missing.ig.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+```
+
+```{r echo=FALSE, message=FALSE}
+ig.city <- lm(ig_indicator ~ houston + losangeles + newyork + philadelphia + phoenix + sanantonio + sandiego, data=df)
+ig.city.summary <- robustSEs(ig.city)
+ig.city.SEs <- c(ig.city.summary[9], ig.city.summary[10], ig.city.summary[11], ig.city.summary[12], ig.city.summary[13], ig.city.summary[14], ig.city.summary[15], ig.city.summary[16])
+```
+
+Table XXX below shows the results of the tests for a difference in average missingness of instagram information, by gender, treatment condition, and location.  While some differences are statistically significant, we do not consider them practically significant, and the missingess of instagram information thus passes the balance check.
+
+```{r results="asis", echo=FALSE, message=FALSE}
+stargazer(ig.gender.summary, ig.treatment.summary,ig.city.summary, se=list(ig.gender.SEs, ig.treatment.SEs, ig.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of IG Missingness")
+#cat("\n\n\\pagebreak\n")
+```
+
+### Missing Age Values
+
+Table XXX below shows the count of profiles that contain the suitor's age, between males and females.
+
+```{r results="asis", echo=FALSE, message=FALSE}
+missing.age.female <- 100*(1-mean(df$age_indicator[df$female==1]))
+missing.age.male <- 100*(1-mean(df$age_indicator[df$female==0]))
+
+total.female <- sum(df$female==1)
+total.male <- sum(df$female==0)
+num.age.female <- sum(df$age_indicator[df$female==1])
+num.age.male <- sum(df$age_indicator[df$female==0])
+
+column.names <- c("Gender", "Total Profiles", "Profiles with Age", "% Missing Age")
+column.1 <- c("Female", "Male")
+column.2 <- c(total.female, total.male)
+column.3 <- c(num.age.female, num.age.male)
+column.4 <- c(missing.age.female, missing.age.male)
+missing.age.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
+colnames(missing.age.table) <- column.names
+print(xtable(missing.age.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+```
+
+```{r echo=FALSE, message=FALSE}
+age.gender <- lm(age_indicator ~ female, data=df)
+age.gender.summary <- robustSEs(age.gender)
+age.gender.SEs <- c(age.gender.summary[3], age.gender.summary[4])
+```
+
+Table XXX below shows the count of profiles that contain the suitor's age, between all treatment conditions.
+
+```{r results="asis", echo=FALSE, message=FALSE}
+missing.age.noedu <- 100*(1-mean(df$age_indicator[df$noedu==1]))
+missing.age.bs <- 100*(1-mean(df$age_indicator[df$bs==1]))
+missing.age.md <- 100*(1-mean(df$age_indicator[df$md==1]))
+missing.age.phd <- 100*(1-mean(df$age_indicator[df$phd==1]))
+total.noedu <- sum(df$noedu==1)
+total.bs <- sum(df$bs==1)
+total.md <- sum(df$md==1)
+total.phd <- sum(df$phd==1)
+num.age.noedu <- sum(df$age_indicator[df$noedu==1])
+num.age.bs <- sum(df$age_indicator[df$bs==1])
+num.age.md <- sum(df$age_indicator[df$md==1])
+num.age.phd <- sum(df$age_indicator[df$phd==1])
+
+column.names <- c("Education Level", "Total Profiles", "Profiles with Age", "% Missing Age")
+column.1 <- c("No Education", "BS", "MD", "PhD")
+column.2 <- c(total.noedu, total.bs, total.md, total.phd)
+column.3 <- c(num.age.noedu, num.age.bs, num.age.md, num.age.phd)
+column.4 <- c(missing.age.noedu, missing.age.bs, missing.age.md, missing.age.phd)
+missing.age.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
+colnames(missing.age.table) <- column.names
+print(xtable(missing.age.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+```
+
+```{r echo=FALSE, message=FALSE}
+age.treatment <- lm(age_indicator ~ bs + md + phd, data=df)
+age.treatment.summary <- robustSEs(age.treatment)
+age.treatment.SEs <- c(age.treatment.summary[5], age.treatment.summary[6], age.treatment.summary[7], age.treatment.summary[8])
+```
+
+Table XXX below shows the count of profiles that contain the suitor's age, between all testing locations.
+
+```{r results="asis", echo=FALSE, message=FALSE}
+missing.age.chicago <- 100*(1-mean(df$age_indicator[df$chicago==1]))
+missing.age.houston <- 100*(1-mean(df$age_indicator[df$houston==1]))
+missing.age.losangeles <- 100*(1-mean(df$age_indicator[df$losangeles==1]))
+missing.age.newyork <- 100*(1-mean(df$age_indicator[df$newyork==1]))
+missing.age.philadelphia <- 100*(1-mean(df$age_indicator[df$philadelphia==1]))
+missing.age.phoenix <- 100*(1-mean(df$age_indicator[df$phoenix==1]))
+missing.age.sanantonio <- 100*(1-mean(df$age_indicator[df$sanantonio==1]))
+missing.age.sandiego <- 100*(1-mean(df$age_indicator[df$sandiego==1]))
+total.chicago <- sum(df$chicago==1)
+total.houston <- sum(df$houston==1)
+total.losangeles <- sum(df$losangeles==1)
+total.newyork <- sum(df$newyork==1)
+total.philadelphia <- sum(df$philadelphia==1)
+total.phoenix <- sum(df$phoenix==1)
+total.sanantonio <- sum(df$sanantonio==1)
+total.sandiego <- sum(df$sandiego==1)
+num.age.chicago <- sum(df$age_indicator[df$chicago==1])
+num.age.houston <- sum(df$age_indicator[df$houston==1])
+num.age.losangeles <- sum(df$age_indicator[df$losangeles==1])
+num.age.newyork <- sum(df$age_indicator[df$newyork==1])
+num.age.philadelphia <- sum(df$age_indicator[df$philadelphia==1])
+num.age.phoenix <- sum(df$age_indicator[df$phoenix==1])
+num.age.sanantonio <- sum(df$age_indicator[df$sanantonio==1])
+num.age.sandiego <- sum(df$age_indicator[df$sandiego==1])
+
+column.names <- c("City", "Total Profiles", "Profiles with Age", "% Missing Age")
+column.1 <- c("Chicago", "Houston", "Los Angeles", "New York", "Phildelphia", "Phoenix", "San Antonio", "San Diego")
+column.2 <- c(total.chicago, total.houston, total.losangeles, total.newyork, 
+              total.philadelphia, total.phoenix, total.sanantonio, total.sandiego)
+column.3 <- c(num.age.chicago, num.age.houston, num.age.losangeles, num.age.newyork, 
+              num.age.philadelphia, num.age.phoenix, num.age.sanantonio, num.age.sandiego)
+column.4 <- c(missing.age.chicago, missing.age.houston, missing.age.losangeles, missing.age.newyork, 
+              missing.age.philadelphia, missing.age.phoenix, missing.age.sanantonio, missing.age.sandiego)
+
+missing.age.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
+colnames(missing.age.table) <- column.names
+print(xtable(missing.age.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+```
+
+```{r echo=FALSE, message=FALSE}
+age.city <- lm(age_indicator ~ houston + losangeles + newyork + philadelphia + phoenix + sanantonio + sandiego, data=df)
+age.city.summary <- robustSEs(age.city)
+age.city.SEs <- c(age.city.summary[9], age.city.summary[10], age.city.summary[11], age.city.summary[12], age.city.summary[13], age.city.summary[14], age.city.summary[15], age.city.summary[16])
+```
+
+Table XXX below shows the results of the tests for a difference in average missingness of the suitor's age, by gender, treatment condition, and location.  While some differences are statistically significant (between males and females, for example), we do not consider them practically significant, and the missingess of age information thus passes the balance check.
+
+```{r results="asis", echo=FALSE, message=FALSE}
+stargazer(age.gender.summary, age.treatment.summary,age.city.summary, se=list(age.gender.SEs, age.treatment.SEs, age.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of Age Missingness")
+#cat("\n\n\\pagebreak\n")
+```
+
+\newpage
+## EDA: Age Distribution
+
+In addition to the missingness of covariates, the age distribution of suitors was also checked for balance across our treatment conditions.  The test profiles had set an age filter of 24-34, and the suitor ages were expected to be evenly distributed in this range.  However in every test condition and for every covariate, the suitors sampled had an age distribution that was centered near 24-25, with a strong right skew.  Figure XXX below shows the ages of suitors in each treatment condition-no education shown, bachelor's degree, MD, and PhD.
+
+```{r echo=FALSE, message=FALSE}
+#turn into subplots
+hist(df$age[df$noedu==1])
+hist(df$age[df$bs==1])
+hist(df$age[df$md==1])
+hist(df$age[df$phd==1])
+```
+ 
+The strong skew in suitor age distribution raised a few questions about the use of Tinder to randomize treatment assignment-- for example, does Tinder select suitors based on a profile's age or its age filter, or is it the case that the general population of Tinder users is around 25 years old?  Figures XXX-XXX below show the ages of suitors for the other experimental conditions.
+
+```{r echo=FALSE, message=FALSE}
+#turn into subplots
+hist(df$age[df$female==1])
+hist(df$age[df$female==0])
+```
+
+
+```{r echo=FALSE, message=FALSE}
+#turn into subplots
+hist(df$age[df$chicago==1])
+hist(df$age[df$houston==1])
+hist(df$age[df$losangeles==1])
+hist(df$age[df$newyork==1])
+hist(df$age[df$philadelphia==1])
+hist(df$age[df$phoenix==1])
+hist(df$age[df$sanantonio==1])
+hist(df$age[df$sandiego==1])
+```
+
+Fortunately, as shown in Figures XXX-XXX above, the skew in age distribution is very similar for all covariate values.  Table XXX below shows the results of the tests for a difference in the average suitor age, by gender, treatment condition, and location.  There appears to be a significant result that the male profile was shown suitors who were on average 0.59 years younger than those shown to the female profile, but for this experiment, a half-year is considered a small effect size.  Most importantly, no significant difference in average suitor age was found between treatments, so the experiment still yields an apples-to-apples comparison.
+
+```{r echo=FALSE, message=FALSE}
+agemodel.gender <- lm(age ~ female, data=df)
+agemodel.gender.summary <- robustSEs(agemodel.gender)
+agemodel.gender.SEs <- c(agemodel.gender.summary[3], agemodel.gender.summary[4])
+```
+
+```{r echo=FALSE, message=FALSE}
+agemodel.treatment <- lm(age ~ bs + md + phd, data=df)
+agemodel.treatment.summary <- robustSEs(agemodel.treatment)
+agemodel.treatment.SEs <- c(agemodel.gender.summary[5], agemodel.gender.summary[6], agemodel.gender.summary[7], agemodel.gender.summary[8])
+```
+
+```{r echo=FALSE, message=FALSE}
+agemodel.city <- lm(age ~ houston + losangeles + newyork + philadelphia + phoenix + sanantonio + sandiego, data=df)
+agemodel.city.summary <- robustSEs(agemodel.city)
+agemodel.city.SEs <- c(agemodel.city.summary[9], agemodel.city.summary[10], agemodel.city.summary[11], agemodel.city.summary[12], agemodel.city.summary[13], agemodel.city.summary[14], agemodel.city.summary[15], agemodel.city.summary[16])
+```
+
+```{r results="asis", echo=FALSE, message=FALSE}
+stargazer(agemodel.gender.summary, agemodel.treatment.summary,agemodel.city.summary, se=list(agemodel.gender.SEs, agemodel.treatment.SEs, agemodel.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of Average Age")
+#cat("\n\n\\pagebreak\n")
+```
