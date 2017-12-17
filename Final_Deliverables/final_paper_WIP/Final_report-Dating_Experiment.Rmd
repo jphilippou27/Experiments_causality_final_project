@@ -85,7 +85,46 @@ Linearly, the design was: R - - 01, R X1 - 02, R X2 - 03, R X3 - 04
 
 ## Randomization engineering
 
-Gathering a larger sample of profiles gave our analysis more power and confidence in the trends observed from the data <<POWER CALC>>. The pilot demonstrated that mannually copying and pasting the details from each suitor's profile prohibited collecting a larger number of profiles. It took about three hours to gather four hundred profiles, meaning just over 2 minutes per profile. The use of automation was a very effective tool that enabled the collection of over five thousand suitor profiles in a four week period, which would have taken one hundred eight five hours by hand. Luckily, the website version of Tinder exactly matched the mobile phone version, greatly streamlining and standardizing the data collection approach. 
+Gathering a larger sample of profiles gave our analysis more power and confidence in the trends observed from the data. As the power calculations below demonstrate, if the study is conducted with individual suitor profiles as the measurement unit there would be a 95% probability of generating results that lead to the rejection of the null in the presence of a true treatment effect, an exceptionally high power. Alternatively, if the analysis considered the group level, then each city(8), each treatment(4) and each gender (2) would result in a much smaller n of 64 and the power in that experiment would be about 8%. The larger the sample size is the more robust the experiment is to identifying subtle differences in the data.
+
+
+Taken from P93 in G&G
+$$
+\begin{aligned}
+\beta = \Phi \Bigg(\bigg(\frac{|\mu_t -\mu_c| \sqrt{N}}{2\sigma}\bigg)- \Phi^{-1} \bigg(1- \frac{\alpha}{2}\bigg)\Bigg)\\
+\end{aligned}
+$$
+
+Applying to our data:
+```{r}
+#Parameters
+alpha = 0.05
+mu_c = 100
+mu_t = 102
+sigma = 15
+
+#calc final - individual level
+n_1 = 3000
+power_indiv = pnorm(((abs(mu_t-mu_c))*sqrt(n_1))/(2*sigma)-qnorm(1-(alpha/2)))
+power_indiv
+#calc final - city level (8 cities, M|F, 4 treatments)
+n_2 = 8*2*4
+power_city = pnorm(((abs(mu_t-mu_c))*sqrt(n_2))/(2*sigma)-qnorm(1-(alpha/2)))
+power_city
+```
+
+
+<<WE SHOULD PROB CUT THIS>>As the results from the power test below indicate, the experiment requires five hundred forty two pariticipants should the delta between the mean for treatment and the mean for the control to vary by 10 and have a standard deviation of 50 matches(at the 95% confidence level). Our experiment compares the means across treatment and control, making it a two sided test. The hypothesis behind the experiment (that success is gender biased towards men) is a one sided test.
+
+helpful reading (for Kalvin and Dan)
+https://www.r-bloggers.com/design-of-experiments-%E2%80%93-power-calculations/
+
+we could do an anova power test to compare across treatment levels, but I'm not sure how to do that
+```{r}
+power.t.test(delta = 10, sd = 50, power = 0.95, type = "two.sample",
+  alternative = "one.sided")
+```
+The pilot demonstrated that mannually copying and pasting the details from each suitor's profile prohibited collecting a larger number of profiles. It took about three hours to gather four hundred profiles, meaning just over 2 minutes per profile. The use of automation was a very effective tool that enabled the collection of over five thousand suitor profiles in a four week period, which would have taken one hundred eight five hours by hand. Luckily, the website version of Tinder exactly matched the mobile phone version, greatly streamlining and standardizing the data collection approach. 
 
 The research team wrote scripts in AutoHotKey (PC) and Maestro (the MAC equivalent) that control the operating system of the computer. The code would open up Tinder and navigate to developers' tools where the website's Javascript rendered soruce code (the HTML behind the webpage) was available. The source code listed the suitors name, age, a unique photo source path (very helpful for data validation later), and two details about the profile. After collecting and storing the source code in the appropriate folder that designated the city and treatment level, the code would automatically right swipe on the profile collect. 
 
@@ -215,24 +254,18 @@ setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
 df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
 head(df)
 ```
-<<<<<<< HEAD
 
 
-```{r}
-#changes missing values to something easier to delete (done later)
-df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
-=======
 ```{r}
 #removing missing values
-for(i in 1:ncol(df)){
-  x = df[,i]
-  if(is.character(df[,i])){
-    df[,i][is.na(x) | nchar(x) == 0] = 'not available'
-  } else if(is.numeric(df[,i])){
-    df[,i][is.na(x)] = 0.0001  # didn't want too small of a number because of scaling function later
-  }
-}
->>>>>>> d5e2fe0f5ace347fef441f2af7a484f41c677faa
+#for(i in 1:ncol(df)){
+#  x = df[,i]
+#  if(is.character(df[,i])){
+#    df[,i][is.na(x) | nchar(x) == 0] = 'not available'
+#  } else if(is.numeric(df[,i])){
+#    df[,i][is.na(x)] = 0.0001  # didn't want too small of a number because of scaling function later
+#  }
+#}
 ```
 
 
@@ -257,33 +290,19 @@ city.model <- lm(age ~ houston + losangeles + newyork + philadelphia + phoenix +
 robustSEs(city.model)
 ```
 
+## Model Results
+As a research team we were extremely excited to see any kind of results. In our pilot and in the first round of testing we struggled with a low overall match rate (0/400 swipes and 5/800) so we were unable to perform initial calculations to evaluate the treatment's effect. The primary concern was that the Tinder user made decisions based solely on physical attractiveness and there would be no variance across our treatment variable. It wasn't until week four of swiping that we could compare the numbers across treatments.  
+
+
 High Level Overview of Outcomes
 ```{r, echo = FALSE}
 cnts = table(df$matches, df$female, dnn=c("Matches","Female Indicator"))
 addmargins(cnts)
 ```
 
-```{r}
+```{r, echo = FALSE}
 cnts_treat = table(df$matches,df$treatment, dnn=c("Matches", "Treatment"))
 addmargins(cnts_treat)
-```
-
-
-
-
-
-$$ 
-\begin{aligned}
-y_i =& Outcome \{ } match\\{ } count\{ } for\{ } ith \{ }unit \\
-{\beta}_0 =& intercept \\
-{\beta}_1Z_i =&
-e_i =& error term
-\end{aligned}
-$$
-
-Mean comparison
-```{r}
-
 ```
 
 
@@ -297,68 +316,85 @@ Y_{Matches} = \beta_0 + \beta_1 MD + \beta_2 PhD + \beta_3 BS + \beta_4 female +
 $$
 
 Test the hypothesis that the profile for our female is more effective, in terms of producing additional matches, than the male profile:
-```{r}
+```{r, echo = FALSE}
 model_gender = lm(matches ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df)
 summary(model_gender)
 #plot(model_MD_base, which = c(1:5))
 ```
 ^ compare with power test results 
 
-WE CAN REMOVE THE VISUAL ON THE NEXT FEW REGRESSIONS I LEFT THEM IN CASE WE WANT TO TWEAK ANYTHING
-Location impact: (chicago is the base)
-```{r}
-df_female = subset(df, df$female == 1)
-df_female = subset(df_female, df_female$age != 0.0001)
-model_location = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, complete.cases(T), data = df_female)
-summary(model_location)
-```
-```{r}
-model_location2 = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +losangeles*md +losangeles*bs+losangeles*phd , data = df_female)
-summary(model_location2)
-```
-```{r}
-model_age = lm(matches ~ md + bs + phd  + age  , data = df_female)
-summary(model_age)
-```
+After enhancing the profiles, we finally saw more matches come in and much to our surprise, the initial theory was completely unfounded. As the regression table shows, we regressed the number of matches against each of the treatments, the female indicator and we also tested for interactions between the treatment variables and gender.  If you look at the first number highlighted in yellow, you can see the highest level of education, MD, has a positive and significant ATE of 0.06 for the female account, meaning that the number of matches actually increased. Prior observational research from match.com indicated that income levels for females was not significant and we were surprised to see a different pattern.
 
-```{r}
-<<<<<<< HEAD
-model_ageInteraction = lm(matches ~ md + bs + phd  + age + age*md +age*bs+  age*phd , data = df_female)
-=======
-model_ageInteraction = lm(matches ~ md + bs + phd  + age +  age*phd , data = df_female)
->>>>>>> d5e2fe0f5ace347fef441f2af7a484f41c677faa
-summary(model_ageInteraction)
-```
+Not surprisingly, with only 13 male matches and over 500 female matches the data results in a highly significant effect on the female indicator variable where the female match rate is 0.16 higher. We didn't want to draw too many conclusions from the male matched records because anything that we might conclude would just be p-hacking, in the regressions on the following page we removed all the male records for that reason and the sample size drops from n = 6,269 to n = 3,034. Additionally, the seventy nine suitor profiles without age information were also removed, but as discussed in the EDA section there is no bias introduced with this action.
 
-```{r}
-<<<<<<< HEAD
-model_details = lm(matches ~ md + bs + phd  +  school + job, data = df_female)
-=======
-model_details = lm(matches ~ md + bs + phd  +  num_ig + school + job, data = df_female)
->>>>>>> d5e2fe0f5ace347fef441f2af7a484f41c677faa
-summary(model_details)
-```
+The results from the prior page are included as the base model in column one, but the research team wanted to add additional covariates to the model little by little to fully understand their impact. The first variable we looked at was age, as the suitor profiles increase in age, there is a significant, but small decrease in the match rate of -0.005, highlighted in column 2.  In column 3 we consider the impact of location, but unlike in our baseline model, there isn't a control column for location that would be the obvious choice to leave out. The coefficients for location are compared to the values for Chicago. We saw significantly more matches in LA than any other city, and Chicago had slightly more matches than the remaining 5, as indicated by the negative coefficient (not all significant). In column 4 we consider the impact of the indicator for a suitor writing in a job title or school. The regression shows the additional covariates don't add bias. Finally in column 5 we have a comprehensive model that amalgamates all the covariates. The most important takeaway from these more detailed models is that the MD treatment is highly significant across in every instance.
 
-```{r}
-df_female = subset(df, df$female == 1)
-model_all = lm(matches ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, complete.cases(T))
-summary(model_all)
-```
-
-Added just in case we want to run the treatments separately:
 ```{r, fig.width =12, results='asis'}
 library(stargazer)
+#prep data
+df_female = subset(df, df$female == 1)
+#changes missing values to something easier to delete (done later)
+df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
+df_female = subset(df_female, df_female$age != 0.0001)
 
+#location model
+model_location = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, complete.cases(T), data = df_female)
+#age
+model_age = lm(matches ~ md + bs + phd  + age  , data = df_female)
+#details
+model_details = lm(matches ~ md + bs + phd  +  school + job, data = df_female)
+
+#all
+model_all = lm(matches ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, complete.cases(T))
 #Change type to "latex" for knitting to pdf
 stargazer(model_gender, model_ageInteraction, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
 
+
+Test to see if models are statistically different and declare best one.
 ```{r}
 anova(model_location, model_all)
 ```
 
+Actual Power of the experiment:
 ```{r}
+#Parameters
+alpha = 0.05
+mu_c = mean(df_female$matches[df_female$noedu==1])
+mu_c
+mu_t = mean((df_female$matches[df_female$md==1]),na.rm = T)
+mu_t
+sigma = sd((df_female$matches[df_female$md==1]),na.rm = T)
 
+#calc final - individual level
+n_1 = 3034
+power_indiv = pnorm(((abs(mu_t-mu_c))*sqrt(n_1))/(2*sigma)-qnorm(1-(alpha/2)))
+power_indiv
 ```
+While the mean between the treatment and control were very small, the large sample size engenders a high powered experiment. 
 
+
+\pagebreak
+## Conclusion
+High level statements about causality and discussion of next steps:
+
+Tactical
+Fully capture all available covariates in suitor profile
+Run code from computers with the same operating system
+Allow collection of matches over a longer duration
+Test treatments in parallel
+Include lower levels of educational attainment & JD/Masters
+
+Strategic
+Incorporate additional covariates such as profile age, swiping day|time, international testing for cultural impact, testing in rural/suburban locations
+Increase number of test profiles and test for attractiveness and race
+Run on different dating applications 
+Test for generalizability with job title and educational prestige
+Consider non heteronormative couples
+Control for impact of distance swiping
+
+Finally, we wanted to share our thoughts for potential improvements with more time and money. We have divided them into 2 main categories, tactical recommendations regarding the execution of the experiment and strategic recommendations regarding extensions of the experiment. For example, on the tactical side we saw additional matches came in after the collection period to mitigate that we could extend the collection period. A strategic extension would be to run the experiment on different dating applications to enable commenting on the macro courtship trends beyond just Tinder. Please feel free to check out the other ideas at your leisure, at this time we would like to thank you for your attention and open the floor up for questions and comments!
+
+\pagebreak
+## Works Consulted
