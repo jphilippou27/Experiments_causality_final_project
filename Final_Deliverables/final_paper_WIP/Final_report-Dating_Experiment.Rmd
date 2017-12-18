@@ -3,9 +3,9 @@ title: "Dating Experiment"
 author: "Kalvin, Dan, and Jennifer"
 date: "December 3, 2017"
 output:
+  word_document: default
   pdf_document: default
   html_document: default
-  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -18,15 +18,18 @@ library(data.table)
 library(foreign)
 library(xtable)#added by Kalvin to make better tables
 library(stargazer)
+#added for treatment graphs
+library(ggplot2)
+library(stringr)
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, include = FALSE}
 #setwd("~/Berkeley/W241/Experiment/Final_Deliverables/final_paper_WIP")#Jen's personal comp
-#setwd("~/Personal/Grad SChool/Courses/w241/Experiment/") # w241_final_project/Final_Deliverables/final_paper_WIP") #Jen's work laptop
+#setwd("/Personal/Grad SChool/Courses/w241/Experiment/") # w241_final_project/Final_Deliverables/final_paper_WIP") #Jen's work laptop
 #setwd("C:/MIDS/W241/final_project/Final Paper")#Kalvin's working directory
-setwd("~/Desktop/w241_final_project/w241_final_project/Final_Deliverables/final_paper_WIP/")
+#setwd("~/Desktop/w241_final_project/w241_final_project/Final_Deliverables/final_paper_WIP/")
 ```
 ## Abstract
 The idea of self-presentation at the early stages of relationships has been well studied in human interactions and via electronic communications.  Our experiment continues this research on the impact of self-presentation of education attainment on online dating success on Tinder.  Our research finds that despite anectdotal claims that females with higher education experienced greater difficulty in finding suitors, females presenting a medical degree on their Tinder profile experienced a 6% increase in match rates over those without any education listed.  Women who presented a PhD on their Tinder profile experienced no statistically significant impact in match rates.
@@ -35,7 +38,7 @@ The idea of self-presentation at the early stages of relationships has been well
 
 Since its release in September 2012, Tinder has experienced a meteoric rise from TechCrunch's Crunchie Award for "Best New Startup of 2013" [^1] to being a world-wide dating application with over 50 million users.[^2]  As of April 2015, Tinder users swipe through 1.6 billion profiles and make more than 26 million matches per day.[^3]  The application is most popular with young adults with 83% of the user base being under the age of 35.[^4]  Despite the immense popularity of the platform, there are very few published studies regarding factors that impact Tinder match rate success.  Our research begins with a brief overview of the use of technology in dating and builds upon prior research regarding self-presentation in the early stages of relationships.  Specifically, we study the impact of education attainment on Tinder match rate success.
 
-To achieve and contextualize the goal of our study, our paper begins with a brief history of online dating followed by a review of prior studies in this arena.  Our research design and data collections processes are discussed along with current problems in data collection on Tinder.  After our results are analyzed, we propose ways in which future studies may improve upon our results and add robustness to this field of research.
+To achieve and contextualize the goal of our study, our paper begins with a brief history of online dating followed by a review of prior studies in this arena.  Our research design and data collection processes are discussed along with challenges associated with the aforementioned data collection on Tinder.  After our results are analyzed, we propose ways in which future studies may improve upon our results and add robustness to this field of research.
 
 [^1]:  https://techcrunch.com/video/tinder-wins-best-new-startup-of-2013-crunchies-awards-2013/518118930/
 [^2]:  https://en.wikipedia.org/wiki/Tinder_(app)
@@ -91,24 +94,23 @@ Based upon prior research indicating that women have stronger preference for inc
 
 
 $$ 
-H_0: {\delta}M_{MD} = M_{BS}  = M_{PhD} = M_{NoEdu} \\
-H_1: M_{MD} < M_{BS}  = M_{PhD} = M_{NoEdu} \\
-H_2: M_{MD} +   M_{BS} \\
-H_3: M_{BS} > M_{PhD} \\
-H_4: 
+\begin{aligned}
+H_0:& \:Male\:and\: female\: profile\: receive\: the \:same \:change \:in\: rate \:of \:matches\: with \:changes\: to \:education\\
+H_1:& \:The \: female \:profile\: gets \:a \:lower\: change \:in \:match\: rate \:as\: education \:increases\: compared \:to \:the\: male \:profile
+\end{aligned}
 $$
    
 
 ## Research Design 
 Our experiment created two fictitious online profiles that mimicked actual user profiles on Tinder.  The profiles were of a male and a female, each 29 years of age.  The profiles included five pictures of each individual in various settings, the individual's name, age, level of education attainment, and a comment stating, "Moving in couple of weeks and looking forward to meeting new people!"
 
-The treatment classes are different levels of educational attainment.  Specifically, whether the individual is has earned a PhD, MD, or a Bachelor's Degree.  The control group displayed no educational attainment level in the profile.  
+The treatment classes are different levels of educational attainment.  Specifically, whether the individual has earned a PhD, MD, or a Bachelor's Degree.  The control group displayed no educational attainment level in the profile.  
 
-The individual's age of 29 years was selected as it is an age when an individual could plausibly have completed any of the treatment levels of education. Further, it is an age where users were more likely to be looking for long-term relationships, rather than short-term flings.  
+Twenty nine years old was the age selected for the profiles as it gives the individual enough time to plausibly have completed any of the treatment levels of education. Further, it is an age where users were more likely to be looking for long-term relationships, rather than short-term flings.  
 
-Based upon prior research, physical attributes tend to be highly significant in partner selection, especially for males, and therefore a single male and a single female were selected for the profile images in order to eliminate variation in match rate based upon aesthetics.  Further, the images used were the same images the individuals had used in their actual Tinder profiles to ensure validity of image selection.
+Based upon prior research, physical attributes tend to be highly significant in partner selection, especially for males, and therefore a single male and a single female were selected for the profile images in order to eliminate variation in match rate based upon aesthetics.  Further, the images used were the same images the individuals had used in prior dating profiles to ensure validity of image selection.
 
-The factitious profiles were displayed over a four week period in the eight largest cities in the United States: New York, Los Angeles, Chicago, Houston, Phoenix, Philadelphia, San Antonio, and San Diego.[^25]  It is important to note that neither individual whose pictures we used had previously used Tinder in any of the test cities, thus reducing the potential for any contamination or bias in the results.  Each profile-educational level combination was displayed to 100 users in each city for a one week period of time in November-December 2017.  Test subjects were randomly selected by  "swiping right" on every other profile displayed.  It should be noted that Tinder profile viewership was restricted to only those who were chosen as test subjects.  This eliminated the ability for a test subject to view the profile at multiple levels of education.  The only potential for spillover would be by an individual having multiple profiles and having been selected twice as a test subject or by recognizing the profile while viewing Tinder on another user's account.
+The factitious profiles were displayed over a four week period in the eight largest cities in the United States: New York, Los Angeles, Chicago, Houston, Phoenix, Philadelphia, San Antonio, and San Diego.[^25]  It is important to note that neither individual whose pictures we used had previously used Tinder in any of the test cities, thus reducing the potential for any contamination or bias in the results.  Each profile-educational level combination was displayed to 100 users in each city for a one week period of time in November-December 2017.  Test subjects were randomly selected by  "swiping right" on every other profile displayed.  It should be noted that Tinder profile viewership was restricted to only those who were chosen as test subjects.  This eliminated the ability for a test subject to view the profile at multiple levels of education.  The only potential for spillover would be by an individual having multiple profiles and having been selected twice as a test subject or by recognizing the profile while viewing Tinder on another user's account. Additonally the research team cross compared a unique identifier for profiles to remove any duplicates.
 
 [^25]: https://en.wikipedia.org/wiki/List_of_United_States_cities_by_population
   
@@ -116,7 +118,7 @@ After one week, we returned to the profile to collect data on which users also "
 
 Linearly, the design was: 
 $$
-R - - 0_1, R X_1 - 0_2, R X_2 - 0_3, R X_3 - 0_4
+R - - 0_1,\; R X_1 - 0_2, \; R X_2 - 0_3, \; R X_3 - 0_4
 $$
 
 ## Randomization engineering
@@ -149,20 +151,9 @@ power_city = pnorm(((abs(mu_t-mu_c))*sqrt(n_2))/(2*sigma)-qnorm(1-(alpha/2)))
 power_city
 ```
 
-
-<<WE SHOULD PROB CUT THIS>>As the results from the power test below indicate, the experiment requires five hundred forty two pariticipants should the delta between the mean for treatment and the mean for the control to vary by 10 and have a standard deviation of 50 matches(at the 95% confidence level). Our experiment compares the means across treatment and control, making it a two sided test. The hypothesis behind the experiment (that success is gender biased towards men) is a one sided test.
-
-helpful reading (for Kalvin and Dan)
-https://www.r-bloggers.com/design-of-experiments-%E2%80%93-power-calculations/
-
-we could do an anova power test to compare across treatment levels, but I'm not sure how to do that
-```{r}
-power.t.test(delta = 10, sd = 50, power = 0.95, type = "two.sample",
-  alternative = "one.sided")
-```
 The pilot demonstrated that mannually copying and pasting the details from each suitor's profile prohibited collecting a larger number of profiles. It took about three hours to gather four hundred profiles, meaning just over 2 minutes per profile. The use of automation was a very effective tool that enabled the collection of over five thousand suitor profiles in a four week period, which would have taken one hundred eight five hours by hand. Luckily, the website version of Tinder exactly matched the mobile phone version, greatly streamlining and standardizing the data collection approach. 
 
-The research team wrote scripts in AutoHotKey (PC) and Maestro (the MAC equivalent) that control the operating system of the computer. The code would open up Tinder and navigate to developers' tools where the website's Javascript rendered source code (the HTML behind the webpage) was available. The source code listed the suitors name, age, a unique photo source path (very helpful for data validation later), and two details about the profile. After collecting and storing the source code in the appropriate folder that designated the city and treatment level, the code would automatically right swipe on the profile collect. 
+The research team wrote scripts in AutoHotKey (PC) and Maestro (the MAC equivalent) that control the operating system of the computer. The code would open up Tinder and navigate to developers' tools where the website's Javascript rendered source code (the HTML behind the webpage) was available. The source code listed the suitors name, age, a unique photo source path, and two details about the profile. After collecting and storing the source code in the appropriate folder that designated the city and treatment level, the code would automatically right swipe on the profile collect. 
 
 Tinder restricts users from seeing repeat profiles to prevent communication between people who previously interacted unsuccessfully, making the trials independent. Each week a new randomly selected batch of ladies and gentlemen were swiped on and put into the experiment. Any user of the Tinder application is subject to the behind the scences algorithm that serves up potential profiles; both the test male and female profiles, along with the profiles of the general Tinder user.
 
@@ -170,7 +161,7 @@ To further enhance the level of randomness within treatment assignment, every ot
 
 Figure XX (will add plots after they're finalized-- please check EDA google doc)
 
-It is interesting to see that the age distribution has a right skew for all treatment conditions, and it is unclear that depending on Tinder to select suitors is truly random-- it could be the case that Tinder selects suitors based on the age set in the test profile, and it could also be the case that the general population of Tinder users is centered around the mid-20s age range.  But the consistency of this distribution across all conditions indicates that there was indeed an equal probability of receiving a given treatment condition, at least amongst the suitors selected by Tinder. 
+It is interesting to see that the age distribution has a right skew for all treatment conditions, and it is unclear that depending on Tinder to select suitors is truly random-- it could be the case that Tinder selects suitors based on the age set in the test profile, that older suitors were more likely to artifically reduce their age (paid accounts for those age 29 and above were twice as expensive), and it could also be the case that the general population of Tinder users is centered around the mid-20s age range.  But the consistency of this distribution across all conditions indicates that there was indeed an equal probability of receiving a given treatment condition, at least amongst the suitors selected by Tinder. 
 
 The age distribution of suitors to the Male profile (female suitors) does seem to be centered approximately 2 years younger than that of suitors to the Female profile, and the skew appears to increase slightly with increasing education level.  However, statistical tests for the difference in average age by test condition yields a significant difference only between the male and female conditions (shown in figures XX-XX below), and its effect size is small-- approximately half a year.
 
@@ -198,13 +189,33 @@ In order to effectively deliver the treatment variable, showing the profile to a
 
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.height = 3, fig.width = 10}
 degree = c("Secondary Education", "Associate's Degree","Bachelor's Degree","Master's Degree", "Research Doctorate","Doctor of Law", "MBA", "Doctor of Medicine" )
 salary = c(51500,57100,79800,87700,94100,107000,118300,161200)
 
-df_treatments = cbind(degree,salary)
+df_treatments = as.data.frame(cbind(degree,as.numeric(salary)))
 
-barplot(as.numeric(df_treatments[,"salary"]), main="Salary by Education Level", xlab="Education", ylab="Salary ($)", names.arg=df_treatments[,"degree"])
+df_treatments <- within(df_treatments, 
+                     Position <- factor(df_treatments$degree, 
+                                        levels=names(sort(table(df_treatments$degree), 
+                                                          decreasing=TRUE))))
+
+ #Plot visual -cnt
+ ggplot(data = df_treatments, aes(x=degree, y = salary)) +
+   ggtitle(label="Salary by Education Level")+
+   geom_bar(stat = "identity", fill ='slategray2') +
+   #geom_text(aes(label = format(salary, big.mark = ","), y = salary +400)) +
+   scale_x_discrete(labels =function(degree) str_wrap(degree, width = 5)) +
+   ylab("Salary($USD)") +
+   xlab("Highest Education Level Completed") +
+   theme_minimal()
+   
+ #colnames(grouped_data)= c("Salary Band", "Employee Count","Pct of Non Mgmt")
+
+ #labels were cutoff
+#barplot(as.numeric(df_treatments[,"salary"]), main="Salary by Education Level", xlab="Education", ylab="Salary ($)", names.arg=df_treatments[,"degree"])
+
+
 ```
 
 The potential suitors were shown a profile that either read: "MD", "PhD", "BS" or the field to provide education information was left blank. A sample profile can be seen below.
@@ -215,6 +226,17 @@ library(grid)
 img <- readPNG("sample_profile.png")
 grid.raster(img)
 ```
+
+```{r, fig.width = 12}
+layout(matrix(1:2,nr=1,byr=T))
+plot(grid.raster(img))
+plot(grid.raster(img))
+#plot(readPNG(img))
+#plot(readPNG(img))
+#plot(readPNG(img))
+#plot(readPNG(img))
+```
+
 
 
 ## Measurement of variables
@@ -285,8 +307,9 @@ Figures and tables that support your in text description
 Clean, clear, well articulated relationships between your theory, your hypotheses, the numbers that your models produce, and the figures you present
 
 ```{r, echo = FALSE}
-#setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
-df = read.csv("~/Desktop/Dating_experiment-Final_Project_DataFV2.csv")
+setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
+df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
+#df = read.csv("~/Desktop/Dating_experiment-Final_Project_DataFV2.csv")
 head(df)
 ```
 
@@ -557,8 +580,9 @@ stargazer(age.gender.summary, age.treatment.summary,age.city.summary, se=list(ag
 
 In addition to the missingness of covariates, the age distribution of suitors was also checked for balance across our treatment conditions.  The test profiles had set an age filter of 24-34, and the suitor ages were expected to be evenly distributed in this range.  However in every test condition and for every covariate, the suitors sampled had an age distribution that was centered near 24-25, with a strong right skew.  Figure XXX below shows the ages of suitors in each treatment condition-no education shown, bachelor's degree, MD, and PhD.
 
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE, fig.width = 11.5, fig.heights = 5}
 #turn into subplots
+par(mfrow = c(2,2))
 hist(df$age[df$noedu==1])
 hist(df$age[df$bs==1])
 hist(df$age[df$md==1])
@@ -567,15 +591,17 @@ hist(df$age[df$phd==1])
  
 The strong skew in suitor age distribution raised a few questions about the use of Tinder to randomize treatment assignment-- for example, does Tinder select suitors based on a profile's age or its age filter, or is it the case that the general population of Tinder users is around 25 years old?  Figures XXX-XXX below show the ages of suitors for the other experimental conditions.
 
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE, fig.width = 11, fig.height=4}
 #turn into subplots
+par(mfrow = c(1,2))
 hist(df$age[df$female==1])
 hist(df$age[df$female==0])
 ```
 
 
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE, fig.width = 11.5}
 #turn into subplots
+par(mfrow = c(2,4))
 hist(df$age[df$chicago==1])
 hist(df$age[df$houston==1])
 hist(df$age[df$losangeles==1])
@@ -644,6 +670,13 @@ summary(model_gender)
 ```
 ^ compare with power test results 
 
+```{r, echo = FALSE}
+model_gender = glm(matches ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df, family = "binomial")
+model_gender = glm(matches ~ md + bs + phd  + female +female*md + female*bs + female*phd , data = df, family = "binomial")
+summary(model_gender)
+#plot(model_MD_base, which = c(1:5))
+```
+
 After enhancing the profiles, we finally saw more matches come in and much to our surprise, the initial theory was completely unfounded. As the regression table shows, we regressed the number of matches against each of the treatments, the female indicator and we also tested for interactions between the treatment variables and gender.  If you look at the first number highlighted in yellow, you can see the highest level of education, MD, has a positive and significant ATE of 0.06 for the female account, meaning that the number of matches actually increased. Prior observational research from match.com indicated that income levels for females was not significant and we were surprised to see a different pattern.
 
 Not surprisingly, with only 13 male matches and over 500 female matches the data results in a highly significant effect on the female indicator variable where the female match rate is 0.16 higher. We didn't want to draw too many conclusions from the male matched records because anything that we might conclude would just be p-hacking, in the regressions on the following page we removed all the male records for that reason and the sample size drops from n = 6,269 to n = 3,034. Additionally, the seventy nine suitor profiles without age information were also removed, but as discussed in the EDA section there is no bias introduced with this action.
@@ -668,14 +701,31 @@ model_details = lm(matches ~ md + bs + phd  +  school + job, data = df_female)
 #all
 model_all = lm(matches ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, complete.cases(T))
 #Change type to "latex" for knitting to pdf
-stargazer(model_gender, model_ageInteraction, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+stargazer(model_gender, model_age, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
 
 
-Test to see if models are statistically different and declare best one.
-```{r}
-anova(model_location, model_all)
+```{r, fig.width =12, results='asis'}
+library(stargazer)
+#prep data
+df_female = subset(df, df$female == 1)
+#changes missing values to something easier to delete (done later)
+df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
+df_female = subset(df_female, df_female$age != 0.0001)
+
+#location model
+model_location = glm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia,  data = df_female, family = "binomial")
+#age
+model_age = glm(matches ~ md + bs + phd  + age  , data = df_female, family = "binomial")
+#details
+model_details = glm(matches ~ md + bs + phd  +  school + job, data = df_female, family = "binomial")
+
+#all
+model_all = glm(matches ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, family = "binomial")
+#Change type to "latex" for knitting to pdf
+stargazer(model_gender, model_age, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+#cat("\n\n\\pagebreak\n")
 ```
 
 Actual Power of the experiment:
