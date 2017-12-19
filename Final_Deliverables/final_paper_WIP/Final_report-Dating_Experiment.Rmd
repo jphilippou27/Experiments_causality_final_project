@@ -21,13 +21,12 @@ library(stargazer)
 #added for treatment graphs
 library(ggplot2)
 library(stringr)
-
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, include = FALSE}
 #setwd("~/Berkeley/W241/Experiment/Final_Deliverables/final_paper_WIP")#Jen's personal comp
-#setwd("/Personal/Grad SChool/Courses/w241/Experiment/") # w241_final_project/Final_Deliverables/final_paper_WIP") #Jen's work laptop
+setwd("~/Personal/Grad SChool/Courses/w241/Experiment/") # w241_final_project/Final_Deliverables/final_paper_WIP") #Jen's work laptop
 #setwd("C:/MIDS/W241/final_project/Final Paper")#Kalvin's working directory
 #setwd("~/Desktop/w241_final_project/w241_final_project/Final_Deliverables/final_paper_WIP/")
 ```
@@ -161,7 +160,7 @@ To further enhance the level of randomness within treatment assignment, every ot
 
 ```{r, echo = FALSE}
 #setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
-df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
+#df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
 #df = read.csv("~/Desktop/Dating_experiment-Final_Project_DataFV2.csv")
 head(df)
 ```
@@ -687,9 +686,21 @@ stargazer(agemodel.gender.summary, agemodel.treatment.summary,agemodel.city.summ
 #cat("\n\n\\pagebreak\n")
 ```
 
-## Model Results
-As a research team we were extremely excited to see any kind of results. In our pilot and in the first round of testing we struggled with a low overall match rate (0/400 swipes and 5/800) so we were unable to perform initial calculations to evaluate the treatment's effect. The primary concern was that the Tinder user made decisions based solely on physical attractiveness and there would be no variance across our treatment variable. It wasn't until week four of swiping that we could compare the numbers across treatments.  
+```{r}
+#NEED FOR REGRESSIONS + POWER CALC
+#prep data
+df_female = subset(df, df$female == 1)
+#changes missing values to something easier to delete (done later)
+df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
+df_female = subset(df_female, df_female$age != 0.0001)
+library(sandwich)
+library(lmtest)
+```
 
+Results:
+As a research team we were extremely excited to see any kind of results. In the pilot and in the first round of testing we struggled with a low overall match rate (0/400 swipes and 5/1,600 respectively) and therefore we could not perform initial calculations to evaluate the treatments' effect. The primary concern was that the Tinder user made decisions based solely on physical attractiveness and there would be no variance across our treatment variable. It wasn't until week four of swiping that we could compare the numbers across treatments. Unfortunately the data points from the pilot and the second week of the project would have introduced too much bias because the profiles were modified thereafter; so the data was excluded from the analysis.
+
+After enhancing the profiles in week three more matches finally came in. The two tables below summarize the match distribution across key variables.  The first table highlights the extreme imbalance across gender where the female profile received almost forty four times the number of matches compared to the male profile. The second table displays the match rate across the treatment groups and that the higher education levels were associated with higher match rates.  The high level figures intimate a causal treatment effect, but more robust calculations must be performed before that claim can be made.
 
 High Level Overview of Outcomes
 ```{r, echo = FALSE}
@@ -698,93 +709,10 @@ addmargins(cnts)
 ```
 
 ```{r, echo = FALSE}
-cnts_treat = table(df$Matched,df$bs, dnn=c("Matches", "BS Treatment"))
+cnts_treat = table(df$Matched,df$treatment, dnn=c("Matches", "Treatment"))
 addmargins(cnts_treat)
 ```
-```{r, echo = FALSE}
-cnts_treat = table(df$Matched,df$md, dnn=c("Matches", "MD Treatment"))
-addmargins(cnts_treat)
-```
-```{r, echo = FALSE}
-cnts_treat = table(df$Matched,df$phd, dnn=c("Matches", "PhD Treatment"))
-addmargins(cnts_treat)
-```
-
-
-Caclulating the ATE:
-Control is in the intercept base the base (otherwise we would have problems with multicolinearity; same thing with including the male indicator)
-
-## Models
-$$ 
-y_i = {\beta}_0 + {\beta}_1Z_i + e_i \\
-Y_{Matches} = \beta_0 + \beta_1 MD + \beta_2 PhD + \beta_3 BS + \beta_4 female + \beta_5 female* MD + \beta_6 female*PhD  + \beta_7 female*BS  + e_i \\
-$$
-
-Test the hypothesis that the profile for our female is more effective, in terms of producing additional matches, than the male profile:
-```{r, echo = FALSE}
-model_gender = lm(Matched ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df)
-summary(model_gender)
-#plot(model_MD_base, which = c(1:5))
-```
-^ compare with power test results 
-
-```{r, echo = FALSE}
-model_gender = glm(Matched ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df, family = "binomial")
-model_gender = glm(Matched ~ md + bs + phd  + female +female*md + female*bs + female*phd , data = df, family = "binomial")
-summary(model_gender)
-#plot(model_MD_base, which = c(1:5))
-```
-
-After enhancing the profiles, we finally saw more matches come in and much to our surprise, the initial theory was completely unfounded. As the regression table shows, we regressed the number of matches against each of the treatments, the female indicator and we also tested for interactions between the treatment variables and gender.  If you look at the first number highlighted in yellow, you can see the highest level of education, MD, has a positive and significant ATE of 0.06 for the female account, meaning that the number of matches actually increased. Prior observational research from match.com indicated that income levels for females was not significant and we were surprised to see a different pattern.
-
-Not surprisingly, with only 13 male matches and over 500 female matches the data results in a highly significant effect on the female indicator variable where the female match rate is 0.16 higher. We didn't want to draw too many conclusions from the male matched records because anything that we might conclude would just be p-hacking, in the regressions on the following page we removed all the male records for that reason and the sample size drops from n = 6,269 to n = 3,034. Additionally, the seventy nine suitor profiles without age information were also removed, but as discussed in the EDA section there is no bias introduced with this action.
-
-The results from the prior page are included as the base model in column one, but the research team wanted to add additional covariates to the model little by little to fully understand their impact. The first variable we looked at was age, as the suitor profiles increase in age, there is a significant, but small decrease in the match rate of -0.005, highlighted in column 2.  In column 3 we consider the impact of location, but unlike in our baseline model, there isn't a control column for location that would be the obvious choice to leave out. The coefficients for location are compared to the values for Chicago. We saw significantly more matches in LA than any other city, and Chicago had slightly more matches than the remaining 5, as indicated by the negative coefficient (not all significant). In column 4 we consider the impact of the indicator for a suitor writing in a job title or school. The regression shows the additional covariates don't add bias. Finally in column 5 we have a comprehensive model that amalgamates all the covariates. The most important takeaway from these more detailed models is that the MD treatment is highly significant across in every instance.
-
-```{r, fig.width =12, results='asis'}
-library(stargazer)
-#prep data
-df_female = subset(df, df$female == 1)
-#changes missing values to something easier to delete (done later)
-df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
-df_female = subset(df_female, df_female$age != 0.0001)
-
-#location model
-model_location = lm(Matched ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, complete.cases(T), data = df_female)
-#age
-model_age = lm(Matched ~ md + bs + phd  + age  , data = df_female)
-#details
-model_details = lm(Matched ~ md + bs + phd  +  school + job, data = df_female)
-
-#all
-model_all = lm(Matched ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, complete.cases(T))
-#Change type to "latex" for knitting to pdf
-stargazer(model_gender, model_age, model_location, model_details, model_all,type = "latex", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
-#cat("\n\n\\pagebreak\n")
-```
-
-
-```{r, fig.width =12, results='asis'}
-library(stargazer)
-#prep data
-df_female = subset(df, df$female == 1)
-#changes missing values to something easier to delete (done later)
-df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
-df_female = subset(df_female, df_female$age != 0.0001)
-
-#location model
-model_location = glm(Matched ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia,  data = df_female, family = "binomial")
-#age
-model_age = glm(Matched ~ md + bs + phd  + age  , data = df_female, family = "binomial")
-#details
-model_details = glm(Matched ~ md + bs + phd  +  school + job, data = df_female, family = "binomial")
-
-#all
-model_all = glm(Matched ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, family = "binomial")
-#Change type to "latex" for knitting to pdf
-stargazer(model_gender, model_age, model_location, model_details, model_all,type = "latex", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
-#cat("\n\n\\pagebreak\n")
-```
+Before building sophisticated models, the research team paused to consider the power of the experiment. While the delta between the treatment and control means was very small, the large sample size engenders a high powered experiment. 
 
 Actual Power of the experiment:
 ```{r}
@@ -801,7 +729,122 @@ n_1 = 3034
 power_indiv = pnorm(((abs(mu_t-mu_c))*sqrt(n_1))/(2*sigma)-qnorm(1-(alpha/2)))
 power_indiv
 ```
-While the mean between the treatment and control were very small, the large sample size engenders a high powered experiment. 
+
+ 
+Modeling Choices:
+To better understand the predictive power and magnitude of each variable the research team exclusively leveraged regression models. This type of model is known for being highly interpretable and there are many different varieties of regression available. For analyzing our experiment we selected both linear and logistic model implementations. 
+
+Part I Linear Regression:
+
+The first model shown below is a standard ordinary least squares regression where the outcome variable is the linear measurement of the match variable. As the regression table shows, we regressed the match indicator against each of the treatments, the female indicator and we also tested for interactions between the treatment variables and gender. The highest level of education, MD, has a positive and significant ATE of 0.06 for the female account meaning that the number of matches actually increased by 6% when the treatment was applied compared to when the control group with no education information was applied. Prior observational research from match.com indicated that income levels for females was not significant and it is surprising to see a different pattern. The regressions shows there were no other statistically significant variables so the other treatment variables, BS and PhD, did not provide evidence of causal relationships.
+
+Not surprisingly, with only thirteen male matches and over five hundred female matches the data results in a highly significant effect on the female indicator variable where the female match rate is sixteen percent points higher. The research team did not want to draw too many conclusions from the male matched records because any findings would just be p-hacking. In the next series of regressions, all the male records were removed from the regression and the sample size drops from n = 6,269 to n = 3,034. Additionally, the seventy nine suitor profiles without age information were also removed, but as discussed in the EDA section there is no bias introduced with this action.
+
+## Models
+$$ 
+y_i = {\beta}_0 + {\beta}_1Z_i + e_i \\
+Y_{Matches} = \beta_0 + \beta_1 MD + \beta_2 PhD + \beta_3 BS + \beta_4 female + \beta_5 female* MD + \beta_6 female*PhD  + \beta_7 female*BS  + e_i \\
+$$
+
+```{r, echo = FALSE, fig.width =11.5}
+model_gender = lm(Matched ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df)
+summary(model_gender)
+```
+ 
+The research team did have some concerns regarding the validity of a linear regression with a binary outcome variable. With any regression model it is important to consider the BLUE assumptions, which is exactly what the plots below explore:
+
+```{r, echo = FALSE, fig.width =11.5, fig.height = 8}
+par(mfrow = c(2,2))
+plot(model_gender, which = c(1,2,3,5))
+```
+To address the violated homoskedacity seen the in residuals vs fitted  and scale-location graphs above, gender model 2 uses robust standard errors, but the coefficient estimates are still the same. More importantly, the female MD treatment is still statistically significant even with a wider confidence interval generated with the robust standard errors.
+```{r}
+library(sandwich)
+model_gender2 = coeftest(model_gender, vcov = vcovHC)
+model_gender2
+```
+
+The results from the prior page are included as the base model in column one, but the research team wanted to add additional covariates to the model little by little to fully understand their impact. The first variable considered was age; as the suitor profiles increase in age, there is a significant but small decrease in the match rate of -0.5% seen in the model results in column two.  Column three considers a model with location covariates, but unlike in the baseline model, there is no control for location that would be the obvious choice to leave out.  Consequently, the coefficients for location are compared to the values for Chicago. The female profile received significantly more matches in LA than any other city, and Chicago had slightly more matches than the remaining five cities, as indicated by the negative coefficients; however these deltas were not all statistically significant. Column four considers the influence of a suitor writing in a job title or school, but the regression shows the additional covariates do not add bias. Finally column five details a comprehensive model that amalgamates all the covariates. The most important takeaway from these more detailed models is that the MD treatment is highly significant across in every instance.
+
+```{r, fig.width =12, results='asis'}
+library(stargazer)
+#location model
+model_location = lm(Matched ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, data = df_female)
+model_location2 = coeftest(model_location, vcov = vcovHC)
+#age
+model_age = lm(Matched ~ md + bs + phd  + age  , data = df_female)
+model_age2 = coeftest(model_age, vcov = vcovHC)
+#details
+model_details = lm(Matched ~ md + bs + phd  +  school + job, data = df_female)
+model_details2 = coeftest(model_details, vcov = vcovHC)
+
+#all
+model_all = lm(Matched ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female)
+model_all2 = coeftest(model_all, vcov = vcovHC)
+#Change type to "latex" for knitting to pdf or text for R viewing
+stargazer(model_gender2, model_age2, model_location2, model_details2, model_all2,type = "latex", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+#cat("\n\n\\pagebreak\n")
+```
+Part II Logistic Regression:
+After reviewing the results of five different regression models the research team observed that all of the coefficients very low and we could not shake the feeling that something was off.  After some research we found that models with probabilities close to 0 and 1 are prime candidates for logistic regression. What does it mean for a probability to be close to 1? If you take the results from the baseline model and plug in a test case, for this example consider a male with an MD, the probability of receiving a match is 0.0064 (calculation built off of baseline regression) or practically 0.
+$$
+\begin{aligned}
+p =& 0.0025 + 0.0039 *1 \\
+p =&  0.0064
+\end{aligned}
+$$
+
+We updated our modeling technique to logistic regression to better fit the data. The regression output below shows a consistently statistically significant female indicator, but instead of the model coefficients showing percentage point difference in probability, the logistic model outputs a log odds ratio. This is a very difficult to interpret measure so we exponentiated the coefficients and interpreted them as regular odds-ratios. The coefficient 4.39 for the female indicator actually means the probability of having a match based on that variable alone (see table converting odds ratios to probability for support) is over 90% and this magnitude of influence is much more practically significant than the 16% seen in the Linear model. The other important call out is that the treatment variable interacted with the female indicator is no longer statistically significant. While the regression coefficient now looks negative, it must be converted to an odds ratio. After that transformation, the probability of a match for a female with an MD is actually a positive 35% probability. Based on our original raw numbers we know that the observed MD match rate is closer to 20% and our new model also has a very large weight on the intercept, indicating there is more analysis needed.
+```{r, echo = FALSE}
+Lmodel_gender = glm(Matched ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df, family = "binomial")
+#Lmodel_gender = glm(matches ~ md + bs + phd  + female +female*md + female*bs + female*phd , data = df, family = "binomial")
+summary(Lmodel_gender)
+exp(coef(Lmodel_gender))
+```
+ 
+```{r, echo = FALSE}
+library(png)
+library(grid)
+img <- readPNG("OddsRatio_scale.PNG")
+grid.raster(img)
+```
+
+ 
+To enable comparison with the linear regression model, we dropped the male data and explored the impact of additional covariates in the tables below.  Now if we consider the impact of the MD treatment we see once again that it is significant in all of the covariate models, and the odds ratio hovers around 1.55 or ~ 60% probability. Despite adding several different coefficients, our models still have highly significant intercepts, high AIC values, and a potentially over stated treatment effect. What the logistic regressions imply is that the model may have explanatory power it does not have much predictive power. While we are confident in the causal relationship seen additional endogenous variables likely exist.
+
+```{r, fig.width =12, results='asis'}
+library(stargazer)
+#prep data
+df_female = subset(df, df$female == 1)
+#changes missing values to something easier to delete (done later)
+df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
+df_female = subset(df_female, df_female$age != 0.0001)
+
+#location model
+Lmodel_location = glm(Matched ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia,  data = df_female, family = "binomial")
+#age
+Lmodel_age = glm(Matched ~ md + bs + phd  + age  , data = df_female, family = "binomial")
+#details
+Lmodel_details = glm(Matched ~ md + bs + phd  +  school + job, data = df_female, family = "binomial")
+
+#all
+Lmodel_all = glm(Matched ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, family = "binomial")
+#Change type to "latex" for knitting to pdf
+stargazer(Lmodel_gender, Lmodel_age, Lmodel_location, Lmodel_details, Lmodel_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+#cat("\n\n\\pagebreak\n")
+```
+
+```{r, echo = FALSE}
+#Exponentiated coef dataframe
+gender = exp(coef(Lmodel_gender))
+age = exp(coef(Lmodel_age))
+loc = exp(coef(Lmodel_location))
+details = exp(coef(Lmodel_details))
+all = exp(coef(Lmodel_all))
+
+df_exponen = cbind(gender, age, loc, details, all)
+df_exponen
+```
 
 ### Randomization Inference
 
@@ -1096,3 +1139,7 @@ To improve the generalizability of these results, we would further want to test 
 
 \pagebreak
 ## Works Consulted
+
+"FAQ: How Do I Interpret Odds Ratios in Logistic Regression?" IDRE Stats, stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-how-do-i-interpret-odds-ratios-in-logistic-regression/.
+
+"Linear vs. Logistic Probability Models: Which Is Better, and When?" Statistical Horizons, statisticalhorizons.com/linear-vs-logistic.
