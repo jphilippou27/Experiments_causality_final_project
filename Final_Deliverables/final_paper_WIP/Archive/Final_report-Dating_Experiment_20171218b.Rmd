@@ -3,9 +3,9 @@ title: "Dating Experiment"
 author: "Kalvin, Dan, and Jennifer"
 date: "December 3, 2017"
 output:
-  #word_document: default
+  word_document: default
   pdf_document: default
-  #html_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -229,8 +229,8 @@ grid.raster(img)
 
 ```{r, fig.width = 12}
 layout(matrix(1:2,nr=1,byr=T))
-plot(grid.raster(img),xlim=c(1,4),ylim=c(1,4))
-plot(grid.raster(img),xlim=c(1,4),ylim=c(1,4))
+plot(grid.raster(img))
+plot(grid.raster(img))
 #plot(readPNG(img))
 #plot(readPNG(img))
 #plot(readPNG(img))
@@ -267,11 +267,10 @@ description <- c("4 possible values*: No education listed (control), Bachelor's,
 variables_table <- matrix(c(variables, variable_type, source, description), nrow=length(variables))
 #variables_table.app <- cbind(variables_table, source)
 colnames(variables_table) <- column_names
-print(xtable(variables_table, digits=c(0,0,2,2,2)), type="latex")
 #kable(variables_table, rownames=FALSE, padding=4)
 #kable(variables_table, fontsize = 8, escape=FALSE, format.args=c(width=2), booktabs=TRUE)
-#kable(variables_table, fontsize = 6, caption="Table XX: Description of Variables") %>%
-  #kable_styling(bootstrap_options = c("striped","responsive"), full_width = FALSE)
+kable(variables_table, fontsize = 6, caption="Table XX: Description of Variables") %>%
+  kable_styling(bootstrap_options = c("striped","responsive"), full_width = FALSE)
   #kable_styling(bootstrap_options = c("striped","responsive")) %>%
   #column_spec(4, width="10em")
 ```
@@ -308,7 +307,7 @@ Figures and tables that support your in text description
 Clean, clear, well articulated relationships between your theory, your hypotheses, the numbers that your models produce, and the figures you present
 
 ```{r, echo = FALSE}
-#setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
+setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
 df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
 #df = read.csv("~/Desktop/Dating_experiment-Final_Project_DataFV2.csv")
 head(df)
@@ -644,20 +643,12 @@ As a research team we were extremely excited to see any kind of results. In our 
 
 High Level Overview of Outcomes
 ```{r, echo = FALSE}
-cnts = table(df$Matched, df$female, dnn=c("Matches","Female Indicator"))
+cnts = table(df$matches, df$female, dnn=c("Matches","Female Indicator"))
 addmargins(cnts)
 ```
 
 ```{r, echo = FALSE}
-cnts_treat = table(df$Matched,df$bs, dnn=c("Matches", "BS Treatment"))
-addmargins(cnts_treat)
-```
-```{r, echo = FALSE}
-cnts_treat = table(df$Matched,df$md, dnn=c("Matches", "MD Treatment"))
-addmargins(cnts_treat)
-```
-```{r, echo = FALSE}
-cnts_treat = table(df$Matched,df$phd, dnn=c("Matches", "PhD Treatment"))
+cnts_treat = table(df$matches,df$treatment, dnn=c("Matches", "Treatment"))
 addmargins(cnts_treat)
 ```
 
@@ -673,15 +664,15 @@ $$
 
 Test the hypothesis that the profile for our female is more effective, in terms of producing additional matches, than the male profile:
 ```{r, echo = FALSE}
-model_gender = lm(Matched ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df)
+model_gender = lm(matches ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df)
 summary(model_gender)
 #plot(model_MD_base, which = c(1:5))
 ```
 ^ compare with power test results 
 
 ```{r, echo = FALSE}
-model_gender = glm(Matched ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df, family = "binomial")
-model_gender = glm(Matched ~ md + bs + phd  + female +female*md + female*bs + female*phd , data = df, family = "binomial")
+model_gender = glm(matches ~ md + bs + phd  + female + female*md + female*bs + female*phd, data = df, family = "binomial")
+model_gender = glm(matches ~ md + bs + phd  + female +female*md + female*bs + female*phd , data = df, family = "binomial")
 summary(model_gender)
 #plot(model_MD_base, which = c(1:5))
 ```
@@ -701,16 +692,16 @@ df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
 df_female = subset(df_female, df_female$age != 0.0001)
 
 #location model
-model_location = lm(Matched ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, complete.cases(T), data = df_female)
+model_location = lm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, complete.cases(T), data = df_female)
 #age
-model_age = lm(Matched ~ md + bs + phd  + age  , data = df_female)
+model_age = lm(matches ~ md + bs + phd  + age  , data = df_female)
 #details
-model_details = lm(Matched ~ md + bs + phd  +  school + job, data = df_female)
+model_details = lm(matches ~ md + bs + phd  +  school + job, data = df_female)
 
 #all
-model_all = lm(Matched ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, complete.cases(T))
+model_all = lm(matches ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, complete.cases(T))
 #Change type to "latex" for knitting to pdf
-stargazer(model_gender, model_age, model_location, model_details, model_all,type = "latex", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+stargazer(model_gender, model_age, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
 
@@ -724,16 +715,16 @@ df_female[,"age"][is.na(df_female[,"age"])] = 0.0001
 df_female = subset(df_female, df_female$age != 0.0001)
 
 #location model
-model_location = glm(Matched ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia,  data = df_female, family = "binomial")
+model_location = glm(matches ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia,  data = df_female, family = "binomial")
 #age
-model_age = glm(Matched ~ md + bs + phd  + age  , data = df_female, family = "binomial")
+model_age = glm(matches ~ md + bs + phd  + age  , data = df_female, family = "binomial")
 #details
-model_details = glm(Matched ~ md + bs + phd  +  school + job, data = df_female, family = "binomial")
+model_details = glm(matches ~ md + bs + phd  +  school + job, data = df_female, family = "binomial")
 
 #all
-model_all = glm(Matched ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, family = "binomial")
+model_all = glm(matches ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, family = "binomial")
 #Change type to "latex" for knitting to pdf
-stargazer(model_gender, model_age, model_location, model_details, model_all,type = "latex", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+stargazer(model_gender, model_age, model_location, model_details, model_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
 
@@ -741,11 +732,11 @@ Actual Power of the experiment:
 ```{r}
 #Parameters
 alpha = 0.05
-mu_c = mean(df_female$Matched[df_female$noedu==1])
+mu_c = mean(df_female$matches[df_female$noedu==1])
 mu_c
-mu_t = mean((df_female$Matched[df_female$md==1]),na.rm = T)
+mu_t = mean((df_female$matches[df_female$md==1]),na.rm = T)
 mu_t
-sigma = sd((df_female$Matched[df_female$md==1]),na.rm = T)
+sigma = sd((df_female$matches[df_female$md==1]),na.rm = T)
 
 #calc final - individual level
 n_1 = 3034
