@@ -159,75 +159,11 @@ Tinder restricts users from seeing repeat profiles to prevent communication betw
 
 To further enhance the level of randomness within treatment assignment, every other profile was systematically rejected from the experiment. Given more time, the treatments could be delivered in alternative orders to help determine if the algorithm modifies the suitor population based on features of the profile. As the experiment was constrained to a five week window, the collection of covariate distributions augments the research team's understanding of the mechanisms driving tinder matches. For example, to help demonstrate the balance in treatment assignment, the distribution of suitor ages for each treatment condition are displayed in figures XX-XX below.
 
-```{r, echo = FALSE}
-#setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
-df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
-#df = read.csv("~/Desktop/Dating_experiment-Final_Project_DataFV2.csv")
-head(df)
-```
-
-```{r echo=FALSE, message=FALSE}
-robustSEs <- function(my.model){
-  my.model$vcovHC <- vcovHC(my.model)
-  my.model.summary <- coeftest(my.model, my.model$vcovHC)
-  return(my.model.summary)
-}
-```
-
-```{r echo=FALSE, message=FALSE, fig.width = 11.5, fig.heights = 5}
-par(mfrow = c(2,2))
-hist(df$age[df$noedu==1], main="Fig. X: Suitor Ages for the No Education Treatment", xlab="Age (years)")
-hist(df$age[df$bs==1], main="Fig. X: Suitor Ages for the BS Treatment", xlab="Age (years)")
-hist(df$age[df$md==1], main="Fig. X: Suitor Ages for the MD Treatment", xlab="Age (years)")
-hist(df$age[df$phd==1], main="Fig. X: Suitor Ages for the PhD Treatment", xlab="Age (years)")
-```
- 
-```{r echo=FALSE, message=FALSE, fig.width = 11, fig.height=4}
-par(mfrow = c(1,2))
-hist(df$age[df$female==1], main="Fig. X: Distribution of Male Suitor Ages", xlab="Age (years)")
-hist(df$age[df$female==0], main="Fig. X: Distribution of Female Suitor Ages", xlab="Age (years)")
-```
-
-
-```{r echo=FALSE, message=FALSE, fig.width = 11.5}
-#turn into subplots
-par(mfrow = c(2,4))
-hist(df$age[df$chicago==1])
-hist(df$age[df$houston==1])
-hist(df$age[df$losangeles==1])
-hist(df$age[df$newyork==1])
-hist(df$age[df$philadelphia==1])
-hist(df$age[df$phoenix==1])
-hist(df$age[df$sanantonio==1])
-hist(df$age[df$sandiego==1])
-```
+Figure XX (will add plots after they're finalized-- please check EDA google doc)
 
 It is interesting to see that the age distribution has a right skew for all treatment conditions, and it is unclear that depending on Tinder to select suitors is truly random-- it could be the case that Tinder selects suitors based on the age set in the test profile, that older suitors were more likely to artifically reduce their age (paid accounts for those age 29 and above were twice as expensive), and it could also be the case that the general population of Tinder users is centered around the mid-20s age range.  But the consistency of this distribution across all conditions indicates that there was indeed an equal probability of receiving a given treatment condition, at least amongst the suitors selected by Tinder. 
 
-The age distribution of suitors to the Male profile (female suitors) does seem to be centered approximately 2 years younger than that of suitors to the Female profile (shown in Figures XX-XX), and the skew appears to increase slightly with increasing education level.  However, statistical tests for the difference in average age by test condition yields a significant difference only between the male and female conditions (shown in figures XX-XX below), and its effect size is small-- approximately half a year.
-
-```{r echo=FALSE, message=FALSE}
-agemodel.gender <- lm(age ~ female, data=df)
-agemodel.gender.summary <- robustSEs(agemodel.gender)
-agemodel.gender.SEs <- c(agemodel.gender.summary[3], agemodel.gender.summary[4])
-```
-
-```{r echo=FALSE, message=FALSE}
-agemodel.treatment <- lm(age ~ bs + md + phd, data=df)
-agemodel.treatment.summary <- robustSEs(agemodel.treatment)
-agemodel.treatment.SEs <- c(agemodel.gender.summary[5], agemodel.gender.summary[6], agemodel.gender.summary[7], agemodel.gender.summary[8])
-```
-
-```{r echo=FALSE, message=FALSE}
-agemodel.city <- lm(age ~ houston + losangeles + newyork + philadelphia + phoenix + sanantonio + sandiego, data=df)
-agemodel.city.summary <- robustSEs(agemodel.city)
-agemodel.city.SEs <- c(agemodel.city.summary[9], agemodel.city.summary[10], agemodel.city.summary[11], agemodel.city.summary[12], agemodel.city.summary[13], agemodel.city.summary[14], agemodel.city.summary[15], agemodel.city.summary[16])
-```
-
-```{r results="asis", echo=FALSE, message=FALSE}
-stargazer(agemodel.gender.summary, agemodel.treatment.summary,agemodel.city.summary, se=list(agemodel.gender.SEs, agemodel.treatment.SEs, agemodel.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of Average Age")
-#cat("\n\n\\pagebreak\n")
-```
+The age distribution of suitors to the Male profile (female suitors) does seem to be centered approximately 2 years younger than that of suitors to the Female profile, and the skew appears to increase slightly with increasing education level.  However, statistical tests for the difference in average age by test condition yields a significant difference only between the male and female conditions (shown in figures XX-XX below), and its effect size is small-- approximately half a year.
 
 
 ## Experimental materials (e.g. treatment materials)
@@ -306,7 +242,7 @@ plot(grid.raster(img),xlim=c(1,4),ylim=c(1,4))
 ## Measurement of variables
 As discussed previously, the treatment in this experiment is the test profile's exposure of a given education level to a potential suitor, and the outcome is whether or not the suitor matches with the test profile.  When applying an education level treatment to the test profile, the measured test subject covariates include its age, sex, and location, and the measured suitor covariates include age, sex, whether or not school information is provided, whether or not job information is provided, and whether or not instagram photos are provided (and their count, if so).  These variables are described in table \textbf{XX} below.
 
-```{r, echo = FALSE, message=FALSE, results="asis"}
+```{r, echo = FALSE}
 #(kalvin) i tried to use kable and kableExtra to format the table, but i'm having trouble using kableExtra
 #(kalvin) i might try a different package later
 
@@ -339,7 +275,6 @@ print(xtable(variables_table, digits=c(0,0,2,2,2)), type="latex")
   #kable_styling(bootstrap_options = c("striped","responsive")) %>%
   #column_spec(4, width="10em")
 ```
-
 \* The initial experimental plan also included the 'Associates' education level as a treatment condition, however, technical issues at the start of the experiment prevented proper execution of the 'PhD' education level treatment, so the 'PhD' education level treatment was repeated and the 'Associates' education level treatment was skipped.
 
 \** The test profile age was an originally planned covariate, but due to time constraints, only one age was used for the entire experiment.
@@ -372,7 +307,15 @@ In text description of your results
 Figures and tables that support your in text description
 Clean, clear, well articulated relationships between your theory, your hypotheses, the numbers that your models produce, and the figures you present
 
-```{r echo=FALSE}
+```{r, echo = FALSE}
+#setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
+df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
+#df = read.csv("~/Desktop/Dating_experiment-Final_Project_DataFV2.csv")
+head(df)
+```
+
+
+```{r}
 #removing missing values
 #for(i in 1:ncol(df)){
 #  x = df[,i]
@@ -386,6 +329,14 @@ Clean, clear, well articulated relationships between your theory, your hypothese
 
 
 ### Exporatory Data Analysis 
+
+```{r}
+robustSEs <- function(my.model){
+  my.model$vcovHC <- vcovHC(my.model)
+  my.model.summary <- coeftest(my.model, my.model$vcovHC)
+  return(my.model.summary)
+}
+```
 
 The randomization of our treatment assignment was dependent on Tinder's selection of suitors.  Since Tinder's algorithm for this selection is unknown and potentially complex, balance across the available covariates was examined to ensure that the experiment yields an apples-to-apples comparison.
 
