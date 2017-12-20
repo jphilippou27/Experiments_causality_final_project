@@ -160,9 +160,9 @@ To further enhance the level of randomness within treatment assignment, every ot
 
 ```{r, echo = FALSE}
 #setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
-df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
+#df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
 #df = read.csv("~/Desktop/Dating_experiment-Final_Project_DataFV2.csv")
-#head(df)
+head(df)
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -709,22 +709,8 @@ addmargins(cnts)
 ```
 
 ```{r, echo = FALSE}
-##i don't have the treatment column in the df dataframe, so i'm unable to run/knit this
-#cnts_treat = table(df$Matched,df$treatment, #dnn=c("Matches", "Treatment"))
-#addmargins(cnts_treat)
-```
-
-```{r echo=FALSE, message=FALSE, results="asis"}
-column.names <- c("", "No Education (Control)", "BS", "MD", "PhD")
-column.1 <- c("Matches", "Total Suitors")
-column.2 <- c(sum(df$Matched[df$noedu==1]), sum(df$noedu==1))
-column.3 <- c(sum(df$Matched[df$bs==1]), sum(df$bs==1))
-column.4 <- c(sum(df$Matched[df$md==1]), sum(df$md==1))
-column.5 <- c(sum(df$Matched[df$phd==1]), sum(df$phd==1))
-
-treatment.match.table <- matrix(c(column.1, column.2, column.3, column.4, column.5), nrow=length(column.1))
-colnames(treatment.match.table) <- column.names
-print(xtable(treatment.match.table), type="latex")#setting decimal places doesn't seem to be working
+cnts_treat = table(df$Matched,df$treatment, dnn=c("Matches", "Treatment"))
+addmargins(cnts_treat)
 ```
 Before building sophisticated models, the research team paused to consider the power of the experiment. While the delta between the treatment and control means was very small, the large sample size engenders a high powered experiment. 
 
@@ -780,7 +766,7 @@ model_gender2
 
 The results from the prior page are included as the base model in column one, but the research team wanted to add additional covariates to the model little by little to fully understand their impact. The first variable considered was age; as the suitor profiles increase in age, there is a significant but small decrease in the match rate of -0.5% seen in the model results in column two.  Column three considers a model with location covariates, but unlike in the baseline model, there is no control for location that would be the obvious choice to leave out.  Consequently, the coefficients for location are compared to the values for Chicago. The female profile received significantly more matches in LA than any other city, and Chicago had slightly more matches than the remaining five cities, as indicated by the negative coefficients; however these deltas were not all statistically significant. Column four considers the influence of a suitor writing in a job title or school, but the regression shows the additional covariates do not add bias. Finally column five details a comprehensive model that amalgamates all the covariates. The most important takeaway from these more detailed models is that the MD treatment is highly significant across in every instance.
 
-```{r, fig.width =12, results='asis', message=FALSE}
+```{r, fig.width =12, results='asis'}
 library(stargazer)
 #location model
 model_location = lm(Matched ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, data = df_female)
@@ -826,7 +812,7 @@ grid.raster(img)
  
 To enable comparison with the linear regression model, we dropped the male data and explored the impact of additional covariates in the tables below.  Now if we consider the impact of the MD treatment we see once again that it is significant in all of the covariate models, and the odds ratio hovers around 1.55 or ~ 60% probability. Despite adding several different coefficients, our models still have highly significant intercepts, high AIC values, and a potentially over stated treatment effect. What the logistic regressions imply is that the model may have explanatory power it does not have much predictive power. While we are confident in the causal relationship seen additional endogenous variables likely exist.
 
-```{r, fig.width =12, results='asis', message=FALSE}
+```{r, fig.width =12, results='asis'}
 library(stargazer)
 #prep data
 df_female = subset(df, df$female == 1)
@@ -1138,7 +1124,7 @@ plot(density(distribution.under.sharp.null.phd), col="red", main="ATE Distributi
 abline(v=phd.ate)
 ```
 
-For the BS treatment, randomization inference yields a p-value of $`r bs.pvalue`$, which is not significant.  The p-value for the PhD treatment is again not significant under randomization inference ($`r phd.pvalue`$).  However, randomization inference shows a significant p-value of $`r md.pvalue`$ for the MD treatment, which provides further confirmation of the results of our analysis.
+For the BS treatment, randomization inference yields a p-value of `r bs.pvalue`, which is not significant.  The p-value for the PhD treatment is again not significant under randomization inference (`r phd.pvalue`).  However, randomization inference shows a significant p-value of `r md.pvalue` for the MD treatment, which provides further confirmation of the results of our analysis.
 
 \pagebreak
 ## Conclusion
