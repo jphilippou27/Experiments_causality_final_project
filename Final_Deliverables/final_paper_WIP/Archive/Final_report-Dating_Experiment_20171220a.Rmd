@@ -4,8 +4,7 @@ author: "Kalvin, Dan, and Jennifer"
 date: "December 3, 2017"
 output:
   #word_document: default
-  pdf_document:
-    number_sections: TRUE
+  pdf_document: default
   #html_document: default
 ---
 
@@ -31,11 +30,10 @@ setwd("~/Personal/Grad SChool/Courses/w241/Experiment/") # w241_final_project/Fi
 #setwd("C:/MIDS/W241/final_project/Final Paper")#Kalvin's working directory
 #setwd("~/Desktop/w241_final_project/w241_final_project/Final_Deliverables/final_paper_WIP/")
 ```
-\begin{center} \textit{Abstract} \end{center}
-
+## Abstract
 The idea of self-presentation at the early stages of relationships has been well studied in the realms of human interactions and electronic communications.  Our experiment continues this research in this domain with a focus on the impact of self-presentation of education attainment on online dating success on Tinder.  Our research finds that despite anectdotal claims that females with higher education experienced greater difficulty in finding suitors, females presenting a medical degree on their Tinder profile experienced a 6% increase in match rates over those without any education listed.  Women who presented a PhD on their Tinder profile experienced no statistically significant impact in match rates.
 
-# Introduction
+## Introduction
 
 Since its release in September 2012, Tinder has experienced a meteoric rise from TechCrunch's Crunchie Award for "Best New Startup of 2013" [^1] to becoming a world-wide dating application with over 50 million users.[^2]  As of April 2015, Tinder users swipe through 1.6 billion profiles and make more than 26 million matches per day.[^3]  The application is most popular with young adults with 83% of the user base being under the age of 35.[^4]  Despite the immense popularity of the platform, there are very few published studies regarding factors that impact Tinder match rate success.  Our research begins with a brief overview of the use of technology in dating and builds upon prior research regarding self-presentation in the early stages of relationships.  Specifically, we study the impact of education attainment on Tinder match rate success.
 
@@ -46,7 +44,7 @@ To achieve and contextualize the goal of our study, our paper begins with a brie
 [^3]:  http://mashable.com/2015/04/15/coachella-tinder-usage-sky-rockets/#1PeiJxGLBmqU
 [^4]:  http://www.businessinsider.com/a-lot-of-people-on-tinder-arent-actually-single-2015-5
 
-## Brief History of Online Dating
+### Brief History of Online Dating
 
 While many believe that online dating is a new phenomenon propelled by the launch of Match.com in 1995, the true conception of the idea goes back hundreds of years.  In fact, the first known use of a person using new communication tools to find love and companionship was in 1695 when a 30-year-old British bachelor placed a personal ad seeking "some good young gentlewoman with the fortune of 3,000 pounds or thereabouts."[^5]  The movement began with the upper echelons of society and moved to the general populous in the mid 1800s, however it was still viewed as deviant behavior.[^6]  The expansions of the American frontier further popularized personal ads, however, they became mainstream as lonely World War I soldiers sought female pen pals.[^7]
 
@@ -69,7 +67,7 @@ The 1990s saw the development of the Internet with the world's first website and
 [^14]: http://www.pbs.org/pov/xoxosms/infographic-technology-dating/
 [^15]: https://www.statisticbrain.com/online-dating-statistics/
 
-## Prior Studies
+### Prior Studies
 
 Self-presentation and self-disclosure are well studied aspects of the relational development.  In Erving Goffman's 1959 study "Presentation of Self In Everyday Life", Goffman explores the way way in which individuals use strategic activities to "convey an impression to others which it is in his interest to convey."[^16]  These strategic activities are most important at the beginning of a relationship where an individual will "alter their self-presentational behavior in accordance with the values desired by the prospective date."[^17]  As Rowatt, Cunningham, & Druen noted, "men, but no women, chang[ed] their self-reported personality characteristics and physical appearance when they expected to meet a potential date.  Additionally, their propensity to exaggerate these characteristics was enhanced when the method of meeting was via email."[^18]  Dating success, however, is not solely tied to an exaggerated presentation of the ideal self.  Reis and Shaver's research indicated that the need to highlight one's positive attributes are experienced in tandem with the need to present' one's true self.[^19]  Interestingly, research by Gibbs, Ellison, and Heino indicates that 94% individuals disagreed that they had intentionally misrepresented themselves in their online communication and 87% felt that intentionally misrepresenting one's self to was unacceptable.[^20]  
 
@@ -103,7 +101,7 @@ H_1:& \:The \: female \:profile\: gets \:a \:lower\: change \:in \:match\: rate 
 $$
    
 
-# Research Design 
+## Research Design 
 Our experiment created two fictitious online profiles that mimicked actual user profiles on Tinder.  The profiles were of a male and a female, each 29 years of age.  The profiles included five pictures of each individual in various settings, the individual's name, age, level of education attainment, and a comment stating, "Moving in couple of weeks and looking forward to meeting new people!"
 
 The treatment classes are different levels of educational attainment.  Specifically, whether the individual has earned a PhD, MD, or a Bachelor's Degree.  The control group displayed no educational attainment level in the profile.  
@@ -123,7 +121,7 @@ $$
 R - - 0_1,\; R X_1 - 0_2, \; R X_2 - 0_3, \; R X_3 - 0_4
 $$
 
-# Randomization Engineering
+## Randomization engineering
 
 Gathering a larger sample of profiles gave our analysis more power and confidence in the trends observed from the data. As the power calculations below demonstrate, if the study is conducted with individual suitor profiles as the measurement unit there would be a 95% probability of generating results that lead to the rejection of the null in the presence of a true treatment effect, an exceptionally high power. Alternatively, if the analysis considered the group level, then each city(8), each treatment(4) and each gender (2) would result in a much smaller n of 64 and the power in that experiment would be about 8%. The larger the sample size is the more robust the experiment is to identifying subtle differences in the data.
 
@@ -232,7 +230,7 @@ stargazer(agemodel.gender.summary, agemodel.treatment.summary,agemodel.city.summ
 ```
 
 
-# Experimental Materials (e.g. treatment materials)
+## Experimental materials (e.g. treatment materials)
 Objectively measuring individual's success in life is ambiguous and difficult, but a reasonably good proxy for research purposes could be educational attainment, job title prestige or educational institution prestige.  Below is a table of potential example degrees of variation for each of the proposed measures of success:
 
 +-----------------------------------+---------------+-------------------------------------+
@@ -245,13 +243,13 @@ Objectively measuring individual's success in life is ambiguous and difficult, b
 | Associate Degree	                | Social Worker	| Community College (Bunker Hill CC)  |
 +-----------------------------------+---------------+-------------------------------------+
 
-As a team we considered the strengths and weakness of each respective success measure.  We planned on customizing the education institution to reflect broadly known schools in the vicinity of each city in the experiment. To enhance consistency of school selection across geography, Barron's Ranking list and the US News school ranking would have been consulted. One of the drawbacks of educational prestige that could not be remedied, however, was that educational prestige is most often determined while the individual is in their early twenties. At such a young age the future of any person is extremely malleable and fertility concerns are not particularly potent.  Generally, it also takes time after obtaining an undergraduate education to become particularly skilled or develop expertise or to develop a positive reputation in a domain of interest. Due to the inadequacy of using educational prestige as a proxy for success, the research team leaned away from using it as a treatment group in the study.
+As a team we considered the strengths and weakness of each respective success measure.  We planned on customizing the education institution to reflect broadly known schools in the vicinity of each city in the experiment. To enhance consistency of school selection across geography, Barron's Ranking list and the US News school ranking would have been consulted. One of the drawbacks of educational prestige that could not be remedied, however, was that educational prestige is most often determined while the individual is in their early twenties. At such a young age the future of any person is extremely malleable and fertility concerns are not particularly potent.  Generally, it also takes time after obtaining an undergraduate education to become particularly skilled or develop expertise or to develop a positive reputation in a domain of interest. Due the inadequacy of using educational prestige as a proxy for success, the research team leaned away from using it as a treatment group in the study.
 
-Professions then appeared as the better measure for success as individuals' career paths are more fleshed out a few years later. Most adults know that doctors make significantly more than teachers who make more than social workers, however, all three professions are in the business of helping people, and this could introduce potential bias. To elaborate on the point about bias, men might seek women with a nurturing profession (picturing the woman raising babies at home) and women might avoid men in a nurturing profession for fear of being replaced in traditional household roles. Additionally researchers at Microsoft recently published a paper demonstrating gender-based job title bias in the general public's vernacular, implying that using job title as a proxy for success potentially introduces bias into an experiment (Bolukbasi, 2016).  Ultimately, professions each carry their own reputation and predefined characteristics and controlling for that would be exceptionally difficult. Additionally, the novelty effect for women and men in unconventional roles also raised some concerns. Cross comparing average salary data from the Occupation Employment Statistics Survey and the Current Population Survey reveal that top paying professions are male dominated. For example, the Bureau of Labor Statistics data shows that 66% of dentists, 64% of lawyers, and 73% of CEOs are men. Meaning that any high paying job selected would be more common among male profiles than female profiles making an apples to apples cross gender comparison questionable. For these reasons, job title was disregarded as the the final success proxy.
+Professions then appeared as the better measure for success as individual's career paths are more fleshed out a few years later. Most adults know that doctors make significantly more than teachers who make more than social workers, however, all three professions are in the business of helping people, and this could introduce potential bias. To elaborate on that point about bias, men might seek women with a nurturing profession (picturing the woman raising babies at home) and women might avoid men for fear of being replaced in the traditional household roles. Additionally researchers at Microsoft recently published a paper demonstrating gender-based job title bias in the general public's vernacular, implying that using job title as a proxy for success potentially introduces bias into an experiment (Bolukbasi, 2016).  Ultimately, professions each carry their own reputation and predefined characteristics and controlling for that would be exceptionally difficult. Additionally, the novelty effect for women and men in unconventional roles also raised some concerns. Cross comparing average salary data from the Occupation Employment Statistics Survey and the Current Population Survey reveal that top paying professions are male dominated. For example, the Bureau of Labor Statistics data shows that 66% of dentists, 64% of lawyers, and 73% of CEOs are men. Meaning that any high paying job selected would be more common among male profiles than female profiles making an apples to apples cross gender comparison questionable. For these reasons, job title was disregarded as the the final success proxy.
 
 The government and society have created very clear breaks in educational attainment that are known to all, uniform across geographic lines, and would be easy to administer for an experiment. Generally people perceive access to education in the United States as exceptionally balanced across gender, and bias concerns are mitigated. As the graph below indicates, on average there is a positive association between higher education and income levels, providing some validation for the positive life impact.  After deciding to run the experiment with educational attainment as the measure of success, the degrees of treatment were identified as MD, BS, and PhD. The research team was particularly interested in the difference between the impact of having a Medical Degree versus having a Research Degree. Both degrees require about five years to obtain, however there is significant difference in expected earnings. Due to concerns regarding the realness of the profile and limited time, the team decided not to test the impact of the associate's degree because other profiles on Tinder did not prominently display an associate's degree. The control group would be a profile giving no information for the particular success measure. The treatments were delivered in the following non-monotonic order: MD, BS, no education, and PhD. 
 
-In order to effectively deliver the treatment variable, showing the profile to a limited audience of potential suitors was paramount. To elaborate on that point, should a potential suitor see the profile change from "MD" to "BS" that would not only ruin the data point, but also risk the injured party flagging the account to the administrators and terminating the experiment prematurely. Fortunately, the premium Tinder account enabled the research team to control who had access to the profile so only the one hundred individuals in each city assigned to that week's treatment were exposed- effectively elminating almost all potential spillover.
+In order to effectively deliver the treatment variable, showing the profile to a limited audience of potential suitors was paramount. To elaborate on that point, should a potential suitor see the profile change from "MD" to "BS" that would not only ruin the data point, but also risk the injured party flagging the account to the administrators and terminating the experiment prematurely. Fortunately, the premium Tinder account enabled the research team to control who had access to the profile so only the one hundred individuals in each city selected for that week's treatment were exposed- effectively elminating almost all potential spillover.
 
 
 
@@ -293,21 +291,20 @@ img <- readPNG("sample_profile.png")
 grid.raster(img)
 ```
 
-```{r, fig.width = 12, echo=FALSE}
+```{r, fig.width = 12}
 #not sure what's intended with these images
-#layout(matrix(1:2,nr=1,byr=T))
-#plot(grid.raster(img),xlim=c(1,4),ylim=c(1,4))
-#plot(grid.raster(img),xlim=c(1,4),ylim=c(1,4))
-
-##plot(readPNG(img))
-##plot(readPNG(img))
-##plot(readPNG(img))
-##plot(readPNG(img))
+layout(matrix(1:2,nr=1,byr=T))
+plot(grid.raster(img),xlim=c(1,4),ylim=c(1,4))
+plot(grid.raster(img),xlim=c(1,4),ylim=c(1,4))
+#plot(readPNG(img))
+#plot(readPNG(img))
+#plot(readPNG(img))
+#plot(readPNG(img))
 ```
 
 
 
-# Measurement of Variables
+## Measurement of variables
 As discussed previously, the treatment in this experiment is the test profile's exposure of a given education level to a potential suitor, and the outcome is whether or not the suitor matches with the test profile.  When applying an education level treatment to the test profile, the measured test subject covariates include its age, sex, and location, and the measured suitor covariates include age, sex, whether or not school information is provided, whether or not job information is provided, and whether or not instagram photos are provided (and their count, if so).  These variables are described in table \textbf{XX} below.
 
 ```{r, echo = FALSE, message=FALSE, results="asis"}
@@ -338,29 +335,33 @@ colnames(variables_table) <- column_names
 print(xtable(variables_table, digits=c(0,0,2,2,2)), type="latex")
 ```
 
-\* The initial experimental plan also included the 'Associates' education level as a treatment condition (see Section 4 for further details).
+\* The initial experimental plan also included the 'Associates' education level as a treatment condition, however, technical issues at the start of the experiment prevented proper execution of the 'PhD' education level treatment, so the 'PhD' education level treatment was repeated and the 'Associates' education level treatment was skipped.
 
 \** The test profile age was an originally planned covariate, but due to time constraints, only one age was used for the entire experiment.
 
-\*** These variables are believed to be only partially observed-- see Section 5.2 for further details.
+\*** These variables are believed to be only partially observed-- see Section \textbf{XX} for further details.
 
 
-## Issues with Measurement of Outcome
+_Issues with Measurement of Outcome_
 
 After swiping right on a suitor, the Tinder application only provides notification if that suitor likes the test profile in return, and does not provide an indication of whether or not a suitor actually saw the profile or if the suitor disliked the test profile.  Our experiment therefore contains some rate of non-compliance and we are unfortunately unable to determine the compliance rate-- our estimated average treatment effect is thus the effect of the intent to treat.
 
 The intent to treat effect is in fact the result of interest.  In practical terms, it describes the effect on match rate a Tinder user should expect when listing a certain education level in his or her profile.  The complier average causal effect, on the other hand, would describe the likelihood that someone swipes right after seeing a certain education level, which is not the research question under examination.
 
 
-## Issues with Measurement of Covariates
+_Issues with Measurement of Covariates_
 
 The structure of the relevant source code in the Tinder browser interface is such that it contains a link to a suitor's profile image (which we use as a unique identifier for that suitor), the suitor's name, the suitor's age, and finally a maximum of two additional details that may include any combination of school information, job information, and instagram information.
 
-It is known that a Tinder profile may display all three of these pieces of information, but none of the source codes collected contained more than two details.  It is highly unlikely that amongst the 6270 suitors encountered in the experiment, none displayed more than two of these details, so we believe that school information, job information, and instagram information are only partially observed, and without more in-depth examination of each suitor profile at the time of experiment execution, our analysis is unable to fully determine the education and job status/level, as well as instagram information, for each suitor.  Due to time and manpower constraints, thorough examination of each profile was unfortunately not an option-- we were required to use an automated swiping method, which acquired covariate information from source code.  It is also known that a Tinder profile may additionally display the suitor's distance and favorite spotify songs, but none of this information was present in the suitor source codes acquired during the experiment, and these two covariates were thus unobserved.
+It is known that a Tinder profile may display all three of these pieces of information, but none of the source codes collected contained more than two details.  It is highly unlikely that amongst the 6200 suitors encountered in the experiment, none displayed more than two of these details, so we believe that school information, job information, and instagram information are only partially observed, and without more in-depth examination of each suitor profile at the time of experiment execution, our analysis is unable to fully determine the education and job status/level, as well as instagram information, for each suitor.  Due to time and manpower constraints, thorough examination of each profile was unfortunately not an option-- we were required to use an automated swiping method, which acquired covariate information from source code.  It is also known that a Tinder profile may additionally display the suitor's distance and favorite spotify songs, but none of this information was present in the suitor source codes acquired during the experiment, and these two covariates were thus unobserved.
 
 The source code indicates which suitor details are the profile image, the name, and the age, but does not indicate which details are school, job, or instagram information.  Our data collection process searches the text of these details to make a best guess as to what type of detail it is (instagram information is easily identified, but not school or job information).  So for some of the school and job details that were collected, it could not be determined whether the detail represented education or employment in a university setting.
 
-# Experiment Results
+
+## Modeling choices
+calculation of statistical power
+
+## Experiment Results
 In text description of your results
 Figures and tables that support your in text description
 Clean, clear, well articulated relationships between your theory, your hypotheses, the numbers that your models produce, and the figures you present
@@ -378,7 +379,7 @@ Clean, clear, well articulated relationships between your theory, your hypothese
 ```
 
 
-## Exporatory Data Analysis 
+### Exporatory Data Analysis 
 
 The randomization of our treatment assignment was dependent on Tinder's selection of suitors.  Since Tinder's algorithm for this selection is unknown and potentially complex, the team was interested in how the available covariates were balanced across test conditions.
 
@@ -632,7 +633,7 @@ library(sandwich)
 library(lmtest)
 ```
 
-## Results
+Results:
 As a research team we were extremely excited to see any kind of results. In the pilot and in the first round of testing we struggled with a low overall match rate (0/400 swipes and 5/1,600 respectively) and therefore we could not perform initial calculations to evaluate the treatments' effect. The primary concern was that the Tinder user made decisions based solely on physical attractiveness and there would be no variance across our treatment variable. It wasn't until week four of swiping that we could compare the numbers across treatments. Unfortunately the data points from the pilot and the second week of the project would have introduced too much bias because the profiles were modified thereafter; so the data was excluded from the analysis.
 
 After enhancing the profiles in week three more matches finally came in. The two tables below summarize the match distribution across key variables.  The first table highlights the extreme imbalance across gender where the female profile received almost forty four times the number of matches compared to the male profile. The second table displays the match rate across the treatment groups and that the higher education levels were associated with higher match rates.  The high level figures intimate a causal treatment effect, but more robust calculations must be performed before that claim can be made.
@@ -643,18 +644,6 @@ cnts = table(df$Matched, df$female, dnn=c("Matches","Female Indicator"))
 addmargins(cnts)
 ```
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
-#I don't know if you'd prefer the following table instead:
-column.names <- c(" ", "Female Profile", "Male Profile")
-column.1 <- c("Matches", "Total Suitors")
-column.2 <- c(sum(df$Matched[df$female==1], na.rm=TRUE), sum(df$female==1))
-column.3 <- c(sum(df$Matched[df$female==0], na.rm=TRUE), sum(df$female==0))
-
-gender.match.table <- matrix(c(column.1, column.2, column.3), nrow=length(column.1))
-colnames(gender.match.table) <- column.names
-print(xtable(gender.match.table), type="latex")#setting decimal places doesn't seem to be working
-```
-
 ```{r, echo = FALSE}
 ##i don't have the treatment column in the df dataframe, so i'm unable to run/knit this
 #cnts_treat = table(df$Matched,df$treatment, #dnn=c("Matches", "Treatment"))
@@ -662,12 +651,12 @@ print(xtable(gender.match.table), type="latex")#setting decimal places doesn't s
 ```
 
 ```{r echo=FALSE, message=FALSE, results="asis"}
-column.names <- c(" ", "No Education (Control)", "BS", "MD", "PhD")
+column.names <- c("", "No Education (Control)", "BS", "MD", "PhD")
 column.1 <- c("Matches", "Total Suitors")
-column.2 <- c(sum(df$Matched[df$noedu==1], na.rm=TRUE), sum(df$noedu==1))
-column.3 <- c(sum(df$Matched[df$bs==1], na.rm=TRUE), sum(df$bs==1))
-column.4 <- c(sum(df$Matched[df$md==1], na.rm=TRUE), sum(df$md==1))
-column.5 <- c(sum(df$Matched[df$phd==1], na.rm=TRUE), sum(df$phd==1))
+column.2 <- c(sum(df$Matched[df$noedu==1]), sum(df$noedu==1))
+column.3 <- c(sum(df$Matched[df$bs==1]), sum(df$bs==1))
+column.4 <- c(sum(df$Matched[df$md==1]), sum(df$md==1))
+column.5 <- c(sum(df$Matched[df$phd==1]), sum(df$phd==1))
 
 treatment.match.table <- matrix(c(column.1, column.2, column.3, column.4, column.5), nrow=length(column.1))
 colnames(treatment.match.table) <- column.names
@@ -692,16 +681,16 @@ power_indiv
 ```
 
  
-# Modeling Choices:
+Modeling Choices:
 To better understand the predictive power and magnitude of each variable the research team exclusively leveraged regression models. This type of model is known for being highly interpretable and there are many different varieties of regression available. For analyzing our experiment we selected both linear and logistic model implementations. 
 
-## Linear Regression:
+Part I Linear Regression:
 
 The first model shown below is a standard ordinary least squares regression where the outcome variable is the linear measurement of the match variable. As the regression table shows, we regressed the match indicator against each of the treatments, the female indicator and we also tested for interactions between the treatment variables and gender. The highest level of education, MD, has a positive and significant ATE of 0.06 for the female account meaning that the number of matches actually increased by 6% when the treatment was applied compared to when the control group with no education information was applied. Prior observational research from match.com indicated that income levels for females was not significant and it is surprising to see a different pattern. The regressions shows there were no other statistically significant variables so the other treatment variables, BS and PhD, did not provide evidence of causal relationships.
 
-Not surprisingly, with only thirteen male matches and over five hundred female matches the data results in a highly significant effect on the female indicator variable where the female match rate is sixteen percent points higher. The research team did not want to draw too many conclusions from the male matched records because any findings would just be p-hacking. In the next series of regressions, all the male records were removed from the regression and the sample size drops from n = 6,269 to n = 3,034. Additionally, the seventy nine suitor profiles without age information were also removed, but as discussed in section 6.1.2, there is no bias introduced with this action.
+Not surprisingly, with only thirteen male matches and over five hundred female matches the data results in a highly significant effect on the female indicator variable where the female match rate is sixteen percent points higher. The research team did not want to draw too many conclusions from the male matched records because any findings would just be p-hacking. In the next series of regressions, all the male records were removed from the regression and the sample size drops from n = 6,269 to n = 3,034. Additionally, the seventy nine suitor profiles without age information were also removed, but as discussed in the EDA section there is no bias introduced with this action.
 
-### Models
+## Models
 $$ 
 y_i = {\beta}_0 + {\beta}_1Z_i + e_i \\
 Y_{Matches} = \beta_0 + \beta_1 MD + \beta_2 PhD + \beta_3 BS + \beta_4 female + \beta_5 female* MD + \beta_6 female*PhD  + \beta_7 female*BS  + e_i \\
@@ -746,7 +735,7 @@ model_all2 = coeftest(model_all, vcov = vcovHC)
 stargazer(model_gender2, model_age2, model_location2, model_details2, model_all2,type = "latex", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
-## Logistic Regression:
+Part II Logistic Regression:
 After reviewing the results of five different regression models the research team observed that all of the coefficients very low and we could not shake the feeling that something was off.  After some research we found that models with probabilities close to 0 and 1 are prime candidates for logistic regression. What does it mean for a probability to be close to 1? If you take the results from the baseline model and plug in a test case, for this example consider a male with an MD, the probability of receiving a match is 0.0064 (calculation built off of baseline regression) or practically 0.
 $$
 \begin{aligned}
@@ -771,7 +760,7 @@ grid.raster(img)
 ```
 
  
-To enable comparison with the linear regression model, we dropped the male data and explored the impact of additional covariates in the tables below.  Now if we consider the impact of the MD treatment we see once again that it is significant in all of the covariate models, and the odds ratio hovers around 1.55 or ~ 60% probability. Despite adding several different coefficients, our models still have highly significant intercepts, high AIC values, and a potentially over-stated treatment effect. What the logistic regressions imply is that the model may have explanatory power, but does not have much predictive power. While we are confident in the causal relationship seen, additional endogenous variables likely exist.
+To enable comparison with the linear regression model, we dropped the male data and explored the impact of additional covariates in the tables below.  Now if we consider the impact of the MD treatment we see once again that it is significant in all of the covariate models, and the odds ratio hovers around 1.55 or ~ 60% probability. Despite adding several different coefficients, our models still have highly significant intercepts, high AIC values, and a potentially over stated treatment effect. What the logistic regressions imply is that the model may have explanatory power it does not have much predictive power. While we are confident in the causal relationship seen additional endogenous variables likely exist.
 
 ```{r, fig.width =12, results='asis', message=FALSE}
 library(stargazer)
@@ -791,7 +780,7 @@ Lmodel_details = glm(Matched ~ md + bs + phd  +  school + job, data = df_female,
 #all
 Lmodel_all = glm(Matched ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, family = "binomial")
 #Change type to "latex" for knitting to pdf
-stargazer(Lmodel_gender, Lmodel_age, Lmodel_location, Lmodel_details, Lmodel_all,type = "latex", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+stargazer(Lmodel_gender, Lmodel_age, Lmodel_location, Lmodel_details, Lmodel_all,type = "text", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
 
@@ -807,7 +796,7 @@ df_exponen = cbind(gender, age, loc, details, all)
 df_exponen
 ```
 
-## Randomization Inference
+### Randomization Inference
 
 Our results are further confirmed by randomization inference under the sharp null hypothesis that treatments have no effect on any individual-- in other words, this test assumes that the education level shown to each suitor had no effect on whether or not there was a match.  The experiment was blocked on gender and location, so we simulate a new randomization of the treatment assignment within each combination of gender and location, and re-calculate the ATE under that treatment assignment.  For each treatment, we repeat this procedure 10,000 times and compare the aggregated ATE's under simulation with our actual estimate in order to gain a sense of the likelihood of observing our estimates if the treatment did not actually have an effect.
 
@@ -1088,18 +1077,18 @@ abline(v=phd.ate)
 For the BS treatment, randomization inference yields a p-value of $`r bs.pvalue`$, which is not significant.  The p-value for the PhD treatment is again not significant under randomization inference ($`r phd.pvalue`$).  However, randomization inference shows a significant p-value of $`r md.pvalue`$ for the MD treatment, which provides further confirmation of the results of our analysis.
 
 \pagebreak
-\section{Conclusion}
+## Conclusion
 
-Our results indicate that females with an MD presented in their dating profile receive a statistically significant increase in match rate of approximately 6.4% over females without an education level presented.  Further, our study found that indicating a bachelor's degree or a PhD had no statistically significant impact on female match rate.  These results are interesting as they contradict previous research that suggests males are less influenced by success factors in a partner than their female counterparts.
+Our results indicate that females with an MD presented in their dating profile, receive a statistically significant increase in match rate of approximately 6.4% over females without an education level presented.  Further, our study found that indicating a bachelor's degree or a PhD had no statistically significant impact on female match rate.  These results are interesting as they contradict previous research that suggests males are less influenced by success factors in a partner than their female counterparts.
 
-Despite these positive results, there are many changes that we would incorporate in further studies in this field.  Tactically, we would put an emphasis on fully capturing all covariates in a suitor's profile.  While this is not currently possible to automate, this could be performed manually.  The study could also be improved by running the research in the target markets to remove any suspicion caused by test subjects being alerted that our factitious user was hundreds or thousands of miles away.  Additionally, with increased technical resources, we would be interested in re-running this study for all profiles over the same time period to remove any variation caused by differences between weeks.  Further studies would also be necessary to understand differences in the measuring period- i.e. would the results have changed if we allowed test subjects to match with our profiles over a two week period instead of only a one week period?  Finally, we would further broaden our treatment levels to include other levels of education such as master's degrees, JDs, PharmDs, etc.
+Despite these positive results, there are many changes that we would incorporate in further studies in this field.  Tactically, we would put an emphasis on fully capturing all covariates in a suitor's profile.  While this is not currently possible to automate, this could be performed manually.  The study could also be improved by running the research in the target markets to remove any suspicion caused by test subjects being alerted that our factitious user was hundreds or thousands of miles away.  Additionally, with increased technical resources, we would be interested in re-running this study for all profiles over the same time period to remove any variation caused by difference in weeks.  Additionally, further studies would be necessary to understand differences in the measuring period- i.e. would the results have changed if we allowed test subjects to match with our profiles over a two week period instead of only a one week period?  Finally, we would further broaden our treatment levels to include other levels of education such as master's degrees, JDs, PharmDs, etc.
 
-To improve the generalizability of these results, we would seek to also test this theory across different dating sites and services.  Further, the scope of the study would need to broaden to include international subjects, as well as subjects in rural and suburban locations, and to incorporate demographic information regarding race, religion, and income.  Testing on other platforms would also allow us to see if similar results are obtained in gay and lesbian online dating communities, which is another topic of interest to our team.
+To improve the generalizability of these results, we would further want to test this theory across different dating sites and services.  Further, the scope of the study would need to broaden to include international subjects, subjects in rural and suburban locations, and incorporate demographic information regarding race, religion, and income.  Further, by testing on other platforms, we would be interested to see if similar results are obtained gay and lesbian couples.
 
 
 
 \pagebreak
-\section{Works Consulted}
+## Works Consulted
 
 "FAQ: How Do I Interpret Odds Ratios in Logistic Regression?" IDRE Stats, stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-how-do-i-interpret-odds-ratios-in-logistic-regression/.
 
