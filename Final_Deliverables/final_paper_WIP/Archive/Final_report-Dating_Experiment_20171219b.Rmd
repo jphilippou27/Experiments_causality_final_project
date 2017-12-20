@@ -106,7 +106,7 @@ Our experiment created two fictitious online profiles that mimicked actual user 
 
 The treatment classes are different levels of educational attainment.  Specifically, whether the individual has earned a PhD, MD, or a Bachelor's Degree.  The control group displayed no educational attainment level in the profile.  
 
-Twenty nine years old was the age selected for the profiles as it gives the individual enough time to plausibly have completed any of the treatment levels of education. Further, it is an age where users were more likely to be looking for long-term relationships, rather than short-term flings.  In each profile's filter settings, the age range of potential suitors was restricted to 24-34.
+Twenty nine years old was the age selected for the profiles as it gives the individual enough time to plausibly have completed any of the treatment levels of education. Further, it is an age where users were more likely to be looking for long-term relationships, rather than short-term flings.  
 
 Based upon prior research, physical attributes tend to be highly significant in partner selection, especially for males, and therefore a single male and a single female were selected for the profile images in order to eliminate variation in match rate based upon aesthetics.  Further, the images used were the same images the individuals had used in prior dating profiles to ensure validity of image selection.
 
@@ -190,21 +190,21 @@ hist(df$age[df$female==0], main="Fig. X: Distribution of Female Suitor Ages", xl
 
 
 ```{r echo=FALSE, message=FALSE, fig.width = 11.5}
-#i don't think we need this
-#par(mfrow = c(2,4))
-#hist(df$age[df$chicago==1])
-#hist(df$age[df$houston==1])
-#hist(df$age[df$losangeles==1])
-#hist(df$age[df$newyork==1])
-#hist(df$age[df$philadelphia==1])
-#hist(df$age[df$phoenix==1])
-#hist(df$age[df$sanantonio==1])
-#hist(df$age[df$sandiego==1])
+#turn into subplots
+par(mfrow = c(2,4))
+hist(df$age[df$chicago==1])
+hist(df$age[df$houston==1])
+hist(df$age[df$losangeles==1])
+hist(df$age[df$newyork==1])
+hist(df$age[df$philadelphia==1])
+hist(df$age[df$phoenix==1])
+hist(df$age[df$sanantonio==1])
+hist(df$age[df$sandiego==1])
 ```
 
-It is interesting to see that the age distribution has a right skew for all treatment conditions, and it is unclear that depending on Tinder to select suitors is truly random-- it could be the case that Tinder selects suitors based on the age or age filter set in the test profile, that older suitors were more likely to artifically reduce their age (paid accounts for those age 29 and above were twice as expensive), or that the general population of Tinder users is centered around the mid-20s age range.  But the consistency of this distribution across all conditions indicates that there was indeed an equal probability of receiving a given treatment condition, at least amongst the suitors selected by Tinder. 
+It is interesting to see that the age distribution has a right skew for all treatment conditions, and it is unclear that depending on Tinder to select suitors is truly random-- it could be the case that Tinder selects suitors based on the age set in the test profile, that older suitors were more likely to artifically reduce their age (paid accounts for those age 29 and above were twice as expensive), and it could also be the case that the general population of Tinder users is centered around the mid-20s age range.  But the consistency of this distribution across all conditions indicates that there was indeed an equal probability of receiving a given treatment condition, at least amongst the suitors selected by Tinder. 
 
-The age distribution of suitors to the Male profile (female suitors) does seem to be centered approximately 2 years younger than that of suitors to the Female profile (shown in Figures XX-XX), and the skew appears to increase slightly with increasing education level.  However, statistical tests for the difference in average age by test condition yields a significant difference only between the male and female conditions (shown in figures XX-XX below), and its effect size is small-- approximately half a year.  Furthermore, since the treatment assignment was randomized within each city and within each gender, this study is generally less concerned with covariate imbalances between cities and between genders.
+The age distribution of suitors to the Male profile (female suitors) does seem to be centered approximately 2 years younger than that of suitors to the Female profile (shown in Figures XX-XX), and the skew appears to increase slightly with increasing education level.  However, statistical tests for the difference in average age by test condition yields a significant difference only between the male and female conditions (shown in figures XX-XX below), and its effect size is small-- approximately half a year.
 
 ```{r echo=FALSE, message=FALSE}
 agemodel.gender <- lm(age ~ female, data=df)
@@ -292,7 +292,6 @@ grid.raster(img)
 ```
 
 ```{r, fig.width = 12}
-#not sure what's intended with these images
 layout(matrix(1:2,nr=1,byr=T))
 plot(grid.raster(img),xlim=c(1,4),ylim=c(1,4))
 plot(grid.raster(img),xlim=c(1,4),ylim=c(1,4))
@@ -333,6 +332,12 @@ variables_table <- matrix(c(variables, variable_type, source, description), nrow
 #variables_table.app <- cbind(variables_table, source)
 colnames(variables_table) <- column_names
 print(xtable(variables_table, digits=c(0,0,2,2,2)), type="latex")
+#kable(variables_table, rownames=FALSE, padding=4)
+#kable(variables_table, fontsize = 8, escape=FALSE, format.args=c(width=2), booktabs=TRUE)
+#kable(variables_table, fontsize = 6, caption="Table XX: Description of Variables") %>%
+  #kable_styling(bootstrap_options = c("striped","responsive"), full_width = FALSE)
+  #kable_styling(bootstrap_options = c("striped","responsive")) %>%
+  #column_spec(4, width="10em")
 ```
 
 \* The initial experimental plan also included the 'Associates' education level as a treatment condition, however, technical issues at the start of the experiment prevented proper execution of the 'PhD' education level treatment, so the 'PhD' education level treatment was repeated and the 'Associates' education level treatment was skipped.
@@ -346,8 +351,6 @@ _Issues with Measurement of Outcome_
 
 After swiping right on a suitor, the Tinder application only provides notification if that suitor likes the test profile in return, and does not provide an indication of whether or not a suitor actually saw the profile or if the suitor disliked the test profile.  Our experiment therefore contains some rate of non-compliance and we are unfortunately unable to determine the compliance rate-- our estimated average treatment effect is thus the effect of the intent to treat.
 
-The intent to treat effect is in fact the result of interest.  In practical terms, it describes the effect on match rate a Tinder user should expect when listing a certain education level in his or her profile.  The complier average causal effect, on the other hand, would describe the likelihood that someone swipes right after seeing a certain education level, which is not the research question under examination.
-
 
 _Issues with Measurement of Covariates_
 
@@ -356,6 +359,9 @@ The structure of the relevant source code in the Tinder browser interface is suc
 It is known that a Tinder profile may display all three of these pieces of information, but none of the source codes collected contained more than two details.  It is highly unlikely that amongst the 6200 suitors encountered in the experiment, none displayed more than two of these details, so we believe that school information, job information, and instagram information are only partially observed, and without more in-depth examination of each suitor profile at the time of experiment execution, our analysis is unable to fully determine the education and job status/level, as well as instagram information, for each suitor.  Due to time and manpower constraints, thorough examination of each profile was unfortunately not an option-- we were required to use an automated swiping method, which acquired covariate information from source code.  It is also known that a Tinder profile may additionally display the suitor's distance and favorite spotify songs, but none of this information was present in the suitor source codes acquired during the experiment, and these two covariates were thus unobserved.
 
 The source code indicates which suitor details are the profile image, the name, and the age, but does not indicate which details are school, job, or instagram information.  Our data collection process searches the text of these details to make a best guess as to what type of detail it is (instagram information is easily identified, but not school or job information).  So for some of the school and job details that were collected, it could not be determined whether the detail represented education or employment in a university setting.
+
+_Data Pre-processing_
+Since the non-binary variables are categorical, they were binarized using indicator variables for each category...
 
 
 ## Modeling choices
@@ -381,7 +387,7 @@ Clean, clear, well articulated relationships between your theory, your hypothese
 
 ### Exporatory Data Analysis 
 
-The randomization of our treatment assignment was dependent on Tinder's selection of suitors.  Since Tinder's algorithm for this selection is unknown and potentially complex, the team was interested in how the available covariates were balanced across test conditions.
+The randomization of our treatment assignment was dependent on Tinder's selection of suitors.  Since Tinder's algorithm for this selection is unknown and potentially complex, balance across the available covariates was examined to ensure that the experiment yields an apples-to-apples comparison.
 
 ```{r echo=FALSE, message=FALSE}
 df$age_indicator <- 1.0*(!is.na(df$age))
@@ -390,7 +396,7 @@ df$ig_indicator <- 1.0*(!is.na(df$num_ig))
 
 ### Missing Instagram Information
 
-Like school and job information, instagram information was missing from many of our suitor profiles.  However, it was easily detected when present in the source code since the format for an instagram detail was consistent across suitor profiles (of the form "X Instagram Photos").  One technical detail of the structure of suitor source codes is that school and job information took priority-- an instagram detail is only present when less than two school or job details are present.  Therefore, whether or not a profile's source code contains an instagram detail could be used to represent the amount of information a suitor chose to include in his or her profile-- the missingness of instagram details is thus examined across experimental conditions.  Table XXX below shows the count of profiles with instagram information detected between the male and female test profiles.
+Like school and job information, instagram information was missing from many of our suitor profiles.  However, it was easily detected when present in the source code since the format for an instagram detail was consistent across suitor profiles (of the form "X Instagram Photos").  One technical detail of the structure of suitor source codes is that school and job information took priority-- an instagram detail is only present when less than two school or job details are present.  Therefore, whether or not a profile's source code contains an instagram detail could be used to represent the amount of information a suitor chose to include in his or her profile-- the missingness of instagram details is thus checked for balance across experimental conditions.  Table XXX below shows the count of profiles with instagram information detected between the male and female test profiles.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 missing.ig.female <- 100*(1-mean(df$ig_indicator[df$female==1]))
@@ -497,7 +503,7 @@ ig.city.summary <- robustSEs(ig.city)
 ig.city.SEs <- c(ig.city.summary[9], ig.city.summary[10], ig.city.summary[11], ig.city.summary[12], ig.city.summary[13], ig.city.summary[14], ig.city.summary[15], ig.city.summary[16])
 ```
 
-Table XXX below shows the results of the tests for a difference in average missingness of instagram information, by gender, treatment condition, and location.  While some differences are statistically significant, we do not consider them practically significant-- the missingess of instagram information seems to be balanced across test conditions.
+Table XXX below shows the results of the tests for a difference in average missingness of instagram information, by gender, treatment condition, and location.  While some differences are statistically significant, we do not consider them practically significant, and the missingess of instagram information thus passes the balance check.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 stargazer(ig.gender.summary, ig.treatment.summary,ig.city.summary, se=list(ig.gender.SEs, ig.treatment.SEs, ig.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of IG Missingness")
@@ -613,14 +619,73 @@ age.city.summary <- robustSEs(age.city)
 age.city.SEs <- c(age.city.summary[9], age.city.summary[10], age.city.summary[11], age.city.summary[12], age.city.summary[13], age.city.summary[14], age.city.summary[15], age.city.summary[16])
 ```
 
-Table XXX below shows the results of the tests for a difference in average missingness of the suitor's age, by gender, treatment condition, and location.  While some differences are statistically significant (between males and females, for example), we do not consider them practically significant.  It appears that the missingess of age information is also balanced across test conditions.
+Table XXX below shows the results of the tests for a difference in average missingness of the suitor's age, by gender, treatment condition, and location.  While some differences are statistically significant (between males and females, for example), we do not consider them practically significant, and the missingess of age information thus passes the balance check.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 stargazer(age.gender.summary, age.treatment.summary,age.city.summary, se=list(age.gender.SEs, age.treatment.SEs, age.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of Age Missingness")
 #cat("\n\n\\pagebreak\n")
 ```
 
-The important result of the exploratory data analysis is that no significant difference in covariates was found between treatments, so the experiment still yields an apples-to-apples comparison.
+### EDA: Age Distribution
+
+In addition to the missingness of covariates, the age distribution of suitors was also checked for balance across our treatment conditions.  The test profiles had set an age filter of 24-34, and the suitor ages were expected to be evenly distributed in this range.  However in every test condition and for every covariate, the suitors sampled had an age distribution that was centered near 24-25, with a strong right skew.  Figure XXX below shows the ages of suitors in each treatment condition-no education shown, bachelor's degree, MD, and PhD.
+
+```{r echo=FALSE, message=FALSE, fig.width = 11.5, fig.heights = 5}
+#turn into subplots
+par(mfrow = c(2,2))
+hist(df$age[df$noedu==1])
+hist(df$age[df$bs==1])
+hist(df$age[df$md==1])
+hist(df$age[df$phd==1])
+```
+ 
+The strong skew in suitor age distribution raised a few questions about the use of Tinder to randomize treatment assignment-- for example, does Tinder select suitors based on a profile's age or its age filter, or is it the case that the general population of Tinder users is around 25 years old?  Figures XXX-XXX below show the ages of suitors for the other experimental conditions.
+
+```{r echo=FALSE, message=FALSE, fig.width = 11, fig.height=4}
+#turn into subplots
+par(mfrow = c(1,2))
+hist(df$age[df$female==1])
+hist(df$age[df$female==0])
+```
+
+
+```{r echo=FALSE, message=FALSE, fig.width = 11.5}
+#turn into subplots
+par(mfrow = c(2,4))
+hist(df$age[df$chicago==1])
+hist(df$age[df$houston==1])
+hist(df$age[df$losangeles==1])
+hist(df$age[df$newyork==1])
+hist(df$age[df$philadelphia==1])
+hist(df$age[df$phoenix==1])
+hist(df$age[df$sanantonio==1])
+hist(df$age[df$sandiego==1])
+```
+
+Fortunately, as shown in Figures XXX-XXX above, the skew in age distribution is very similar for all covariate values.  Table XXX below shows the results of the tests for a difference in the average suitor age, by gender, treatment condition, and location.  There appears to be a significant result that the male profile was shown suitors who were on average 0.59 years younger than those shown to the female profile, but for this experiment, a half-year is considered a small effect size.  Most importantly, no significant difference in average suitor age was found between treatments, so the experiment still yields an apples-to-apples comparison.
+
+```{r echo=FALSE, message=FALSE}
+agemodel.gender <- lm(age ~ female, data=df)
+agemodel.gender.summary <- robustSEs(agemodel.gender)
+agemodel.gender.SEs <- c(agemodel.gender.summary[3], agemodel.gender.summary[4])
+```
+
+```{r echo=FALSE, message=FALSE}
+agemodel.treatment <- lm(age ~ bs + md + phd, data=df)
+agemodel.treatment.summary <- robustSEs(agemodel.treatment)
+agemodel.treatment.SEs <- c(agemodel.gender.summary[5], agemodel.gender.summary[6], agemodel.gender.summary[7], agemodel.gender.summary[8])
+```
+
+```{r echo=FALSE, message=FALSE}
+agemodel.city <- lm(age ~ houston + losangeles + newyork + philadelphia + phoenix + sanantonio + sandiego, data=df)
+agemodel.city.summary <- robustSEs(agemodel.city)
+agemodel.city.SEs <- c(agemodel.city.summary[9], agemodel.city.summary[10], agemodel.city.summary[11], agemodel.city.summary[12], agemodel.city.summary[13], agemodel.city.summary[14], agemodel.city.summary[15], agemodel.city.summary[16])
+```
+
+```{r results="asis", echo=FALSE, message=FALSE}
+stargazer(agemodel.gender.summary, agemodel.treatment.summary,agemodel.city.summary, se=list(agemodel.gender.SEs, agemodel.treatment.SEs, agemodel.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of Average Age")
+#cat("\n\n\\pagebreak\n")
+```
 
 ```{r}
 #NEED FOR REGRESSIONS + POWER CALC
