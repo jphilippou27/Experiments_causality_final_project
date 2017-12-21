@@ -338,7 +338,7 @@ description <- c("4 possible values*: No education listed (control), Bachelor's,
 variables_table <- matrix(c(variables, variable_type, source, description), nrow=length(variables))
 #variables_table.app <- cbind(variables_table, source)
 colnames(variables_table) <- column_names
-print(xtable(variables_table, align="llllp{2in}", digits=c(0,0,2,2,2), caption = 'Variable Descriptions'),caption.placement = 'top', type="latex")
+print(xtable(variables_table, digits=c(0,0,2,2,2), caption = 'Variable Descriptions'),caption.placement = 'top', type="latex")
 ```
 
 \* The initial experimental plan also included the 'Associates' education level as a treatment condition (see Section 4 for further details).
@@ -393,7 +393,7 @@ column.3 <- c(num.ig.female, num.ig.male)
 column.4 <- c(missing.ig.female, missing.ig.male)
 missing.ig.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.ig.table) <- column.names
-print(xtable(missing.ig.table, digits=c(0,0,2,2,2), caption = 'Profile Instagram Data by Gender'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.ig.table, digits=c(0,0,2,2,2), caption = 'Profile Instagram Data by Sex'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -509,7 +509,7 @@ column.3 <- c(num.age.female, num.age.male)
 column.4 <- c(missing.age.female, missing.age.male)
 missing.age.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.age.table) <- column.names
-print(xtable(missing.age.table, digits=c(0,0,2,2,2), caption = 'Profile Age Data by Gender'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.age.table, digits=c(0,0,2,2,2), caption = 'Profile Age Data by Sex'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -518,7 +518,7 @@ age.gender.summary <- robustSEs(age.gender)
 age.gender.SEs <- c(age.gender.summary[3], age.gender.summary[4])
 ```
 
-Table 9 below shows the count of profiles that contain the suitor's age, between all treatment conditions.
+Table 10 below shows the count of profiles that contain the suitor's age, between all treatment conditions.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 missing.age.noedu <- 100*(1-mean(df$age_indicator[df$noedu==1]))
@@ -541,7 +541,7 @@ column.3 <- c(num.age.noedu, num.age.bs, num.age.md, num.age.phd)
 column.4 <- c(missing.age.noedu, missing.age.bs, missing.age.md, missing.age.phd)
 missing.age.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.age.table) <- column.names
-print(xtable(missing.age.table, digits=c(0,0,2,2,2), caption = 'Profile Age Data by Education Level'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.age.table, digits=c(0,0,2,2,2), caption = 'Profiles Missing Age Data by Education Level'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -550,7 +550,7 @@ age.treatment.summary <- robustSEs(age.treatment)
 age.treatment.SEs <- c(age.treatment.summary[5], age.treatment.summary[6], age.treatment.summary[7], age.treatment.summary[8])
 ```
 
-Table 10 below shows the count of profiles that contain the suitor's age, between all testing locations.
+Table 11 below shows the count of profiles that contain the suitor's age, between all testing locations.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 missing.age.chicago <- 100*(1-mean(df$age_indicator[df$chicago==1]))
@@ -589,7 +589,7 @@ column.4 <- c(missing.age.chicago, missing.age.houston, missing.age.losangeles, 
 
 missing.age.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.age.table) <- column.names
-print(xtable(missing.age.table, digits=c(0,0,2,2,2), caption = 'Profile Age Data by City'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.age.table, digits=c(0,0,2,2,2), caption = 'Profiles Missing Age Data by City'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -716,7 +716,7 @@ model_gender2
 
 The results from the prior page are included as the base model in column one, but the research team wanted to add additional covariates to the model little by little to fully understand their impact. The first variable considered was age; as the suitor profiles increase in age, there is a significant but small decrease in the match rate of -0.5% seen in the model results in column two.  Column three considers a model with location covariates, but unlike in the baseline model, there is no control for location that would be the obvious choice to leave out.  Consequently, the coefficients for location are compared to the values for Chicago. The female profile received significantly more matches in LA than any other city, and Chicago had slightly more matches than the remaining five cities, as indicated by the negative coefficients; however these deltas were not all statistically significant. Column four considers the influence of a suitor sharing his or her job title or school, but the regression shows the additional covariates do not add bias. Finally column five details a comprehensive model that amalgamates all the covariates. The most important takeaway from these more detailed models is that the MD treatment is highly significant across in every instance.
 
-```{r, fig.width =12, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.width =12, results='asis', message=FALSE}
 library(stargazer)
 #location model
 model_location = lm(Matched ~ md + bs + phd  + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia, data = df_female)
@@ -762,7 +762,7 @@ grid.raster(img)
  
 To enable comparison with the linear regression model, we dropped the male data and explored the impact of additional covariates in the tables below.  Now if we consider the impact of the MD treatment we see once again that it is significant in all of the covariate models, and the odds ratio hovers around 1.55 or ~ 60% probability. Despite adding several different coefficients, our models still have highly significant intercepts, high AIC values, and a potentially over-stated treatment effect. What the logistic regressions imply is that the model may have explanatory power, but does not have much predictive power. While we are confident in the causal relationship seen, additional endogenous variables likely exist.
 
-```{r, fig.width =12, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.width =12, results='asis', message=FALSE}
 library(stargazer)
 #prep data
 df_female = subset(df, df$female == 1)
