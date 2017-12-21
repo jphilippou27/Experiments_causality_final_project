@@ -3,9 +3,9 @@ title: "Dating Experiment"
 author: "Kalvin, Dan, and Jennifer"
 date: "December 3, 2017"
 output:
-  word_document: default
   pdf_document:
     number_sections: yes
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -17,6 +17,7 @@ library(multiwayvcov)
 library(data.table)
 library(foreign)
 library(xtable)#added by Kalvin to make better tables
+options(xtable.comment = FALSE)
 library(stargazer)
 #added for treatment graphs
 library(ggplot2)
@@ -24,14 +25,15 @@ library(stringr)
 #to see profile examples
 library(png)
 library(grid)
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=4, tidy.opts=list(width.cutoff=60),tidy=TRUE)
+
 ```
 
 ```{r, include = FALSE}
-setwd("C:/Users/Jennifer/Desktop/")#Jen's personal comp
+#setwd("C:/Users/Jennifer/Desktop/")#Jen's personal comp
 #setwd("~/Personal/Grad SChool/Courses/w241/Experiment/") # w241_final_project/Final_Deliverables/final_paper_WIP") #Jen's work laptop
 #setwd("C:/MIDS/W241/final_project/Final Paper")#Kalvin's working directory
-#setwd("~/Desktop/w241_final_project/w241_final_project/Final_Deliverables/final_paper_WIP/")
+setwd("~/Desktop/w241_final_project/Final_Deliverables/final_paper_WIP/")
 ```
 \begin{center} \textit{Abstract} \end{center}
 
@@ -161,13 +163,13 @@ The research team wrote scripts in AutoHotKey (PC) and Maestro (the MAC equivale
 
 Tinder restricts users from seeing repeat profiles to prevent communication between people who previously interacted unsuccessfully, making the trials independent. Each week a new randomly selected batch of ladies and gentlemen were swiped on and put into the experiment. Any user of the Tinder application is subject to the behind the scences algorithm that serves up potential profiles; both the test male and female profiles, along with the profiles of the general Tinder user.
 
-To further enhance the level of randomness within treatment assignment, every other profile was systematically rejected from the experiment. Given more time, the treatments could be delivered in alternative orders to help determine if the algorithm modifies the suitor population based on features of the profile. As the experiment was constrained to a five week window, the collection of covariate distributions augments the research team's understanding of the mechanisms driving tinder matches. For example, to help demonstrate the balance in treatment assignment, the distribution of suitor ages for each treatment condition are displayed in figures XX-XX below.
+To further enhance the level of randomness within treatment assignment, every other profile was systematically rejected from the experiment. Given more time, the treatments could be delivered in alternative orders to help determine if the algorithm modifies the suitor population based on features of the profile. As the experiment was constrained to a five week window, the collection of covariate distributions augments the research team's understanding of the mechanisms driving tinder matches. For example, to help demonstrate the balance in treatment assignment, the distribution of suitor ages for each treatment condition are displayed in figures 1.1-1.4 below.
 
 ```{r, echo = FALSE}
 #setwd("~/Personal/Grad SChool/Courses/w241/Experiment")
-setwd("C:/Users/Jennifer/Desktop/")#Jen's personal comp
-df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
-#df = read.csv("~/Desktop/Dating_experiment-Final_Project_DataFV2.csv")
+#setwd("C:/Users/Jennifer/Desktop/")#Jen's personal comp
+#df = read.csv("Dating_experiment-Final_Project_DataFV.csv")
+df = read.csv("~/Desktop/Dating_experiment-Final_Project_DataFV.csv")
 #head(df)
 ```
 
@@ -181,16 +183,16 @@ robustSEs <- function(my.model){
 
 ```{r echo=FALSE, message=FALSE, fig.width = 11.5, fig.heights = 7}
 par(mfrow = c(2,2))
-hist(df$age[df$noedu==1], main="Fig. X: Suitor Ages for the No Education Treatment", xlab="Age (years)")
-hist(df$age[df$bs==1], main="Fig. X: Suitor Ages for the BS Treatment", xlab="Age (years)")
-hist(df$age[df$md==1], main="Fig. X: Suitor Ages for the MD Treatment", xlab="Age (years)")
-hist(df$age[df$phd==1], main="Fig. X: Suitor Ages for the PhD Treatment", xlab="Age (years)")
+hist(df$age[df$noedu==1], main="Fig. 1.1: Suitor Ages for the No Education Treatment", xlab="Age (years)")
+hist(df$age[df$bs==1], main="Fig. 1.2: Suitor Ages for the BS Treatment", xlab="Age (years)")
+hist(df$age[df$md==1], main="Fig. 1.3: Suitor Ages for the MD Treatment", xlab="Age (years)")
+hist(df$age[df$phd==1], main="Fig. 1.4: Suitor Ages for the PhD Treatment", xlab="Age (years)")
 ```
  
 ```{r echo=FALSE, message=FALSE, fig.width = 11, fig.height=4}
 par(mfrow = c(1,2))
-hist(df$age[df$female==1], main="Fig. X: Distribution of Male Suitor Ages", xlab="Age (years)")
-hist(df$age[df$female==0], main="Fig. X: Distribution of Female Suitor Ages", xlab="Age (years)")
+hist(df$age[df$female==1], main="Fig. 2.1: Distribution of Male Suitor Ages", xlab="Age (years)")
+hist(df$age[df$female==0], main="Fig. 2.2: Distribution of Female Suitor Ages", xlab="Age (years)")
 ```
 
 
@@ -209,7 +211,7 @@ hist(df$age[df$female==0], main="Fig. X: Distribution of Female Suitor Ages", xl
 
 It is interesting to see that the age distribution has a right skew for all treatment conditions, and it is unclear if depending on Tinder to select suitors is truly random-- it could be the case that Tinder selects suitors based on the age or age filter set in the test profile, that older suitors were more likely to artifically reduce their age (paid accounts for those age 29 and above were twice as expensive), or that the general population of Tinder users is centered around the mid-20s age range.  But the consistency of this distribution across all conditions indicates that there was indeed an equal probability of receiving a given treatment condition, at least amongst the suitors selected by Tinder. 
 
-The age distribution of suitors to the Male profile (female suitors) does seem to be centered approximately 2 years younger than that of suitors to the Female profile (shown in Figures XX-XX), and the skew appears to increase slightly with increasing education level.  However, statistical tests for the difference in average age by test condition yields a significant difference only between the male and female conditions (shown in figures XX-XX below), and its effect size is small-- approximately half a year.  Furthermore, since the treatment assignment was randomized within each city and within each gender, this study is generally less concerned with covariate imbalances between cities and between genders.
+The age distribution of suitors to the Male profile (female suitors) does seem to be centered approximately 2 years younger than that of suitors to the Female profile (shown in Figures 2.1-2.2), and the skew appears to increase slightly with increasing education level.  However, statistical tests for the difference in average age by test condition yields a significant difference only between the male and female conditions (shown in Table 1 below), and its effect size is small-- approximately half a year.  Furthermore, since the treatment assignment was randomized within each city and within each gender, this study is generally less concerned with covariate imbalances between cities and between genders.
 
 ```{r echo=FALSE, message=FALSE}
 agemodel.gender <- lm(age ~ female, data=df)
@@ -229,8 +231,8 @@ agemodel.city.summary <- robustSEs(agemodel.city)
 agemodel.city.SEs <- c(agemodel.city.summary[9], agemodel.city.summary[10], agemodel.city.summary[11], agemodel.city.summary[12], agemodel.city.summary[13], agemodel.city.summary[14], agemodel.city.summary[15], agemodel.city.summary[16])
 ```
 
-```{r results="asis", echo=FALSE, message=FALSE}
-stargazer(agemodel.gender.summary, agemodel.treatment.summary,agemodel.city.summary, se=list(agemodel.gender.SEs, agemodel.treatment.SEs, agemodel.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of Average Age")
+```{r results="asis", echo=FALSE, message=FALSE, results="asis"}
+stargazer(agemodel.gender.summary, agemodel.treatment.summary,agemodel.city.summary, se=list(agemodel.gender.SEs, agemodel.treatment.SEs, agemodel.city.SEs), type = "latex", report = "vcs*", single.row = T, header = FALSE, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of Average Age")
 #cat("\n\n\\pagebreak\n")
 ```
 
@@ -248,13 +250,14 @@ Objectively measuring individual's success in life is ambiguous and difficult, b
 | Associate Degree	                | Social Worker	| Community College (Bunker Hill CC)  |
 +-----------------------------------+---------------+-------------------------------------+
 
+
 As a team we considered the strengths and weakness of each respective success measure.  We planned on customizing the education institution to reflect broadly known schools in the vicinity of each city in the experiment. To enhance consistency of school selection across geography, Barron's Ranking list and the US News school ranking would have been consulted. One of the drawbacks of educational prestige that could not be remedied, however, was that educational prestige is most often determined while the individual is in their early twenties. At such a young age the future of any person is extremely malleable and fertility concerns are not particularly potent.  Generally, it also takes time after obtaining an undergraduate education to become particularly skilled or develop expertise or to develop a positive reputation in a domain of interest. Due to the inadequacy of using educational prestige as a proxy for success, the research team leaned away from using it as a treatment group in the study.
 
-Professions then appeared as the better measure for success as individuals' career paths are more fleshed out a few years later. Most adults know that doctors make significantly more than teachers who make more than social workers, however, all three professions are in the business of helping people, and this could introduce potential bias. To elaborate on the point about bias, men might seek women with a nurturing profession (picturing the woman raising babies at home) and women might avoid men in a nurturing profession for fear of being replaced in traditional household roles. Additionally researchers at Microsoft recently published a paper demonstrating gender-based job title bias in the general public's vernacular, implying that using job title as a proxy for success potentially introduces bias into an experiment. [^27]  Ultimately, professions each carry their own reputation and predefined characteristics and controlling for that would be exceptionally difficult. Additionally, the novelty effect for women and men in unconventional roles also raised some concerns. Cross comparing average salary data from the Occupation Employment Statistics Survey and the Current Population Survey reveal that top paying professions are male dominated. For example, the Bureau of Labor Statistics data shows that 66% of dentists, 64% of lawyers, and 73% of CEOs are men.[^25][^26] Meaning that any high paying job selected would be more common among male profiles than female profiles making an apples to apples cross gender comparison questionable. For these reasons, job title was disregarded as the the final success proxy.
+Professions then appeared as the better measure for success as individuals' career paths are more fleshed out a few years later. Most adults know that doctors make significantly more than teachers who make more than social workers, however, all three professions are in the business of helping people, and this could introduce potential bias. To elaborate on the point about bias, men might seek women with a nurturing profession (picturing the woman raising babies at home) and women might avoid men in a nurturing profession for fear of being replaced in traditional household roles. Additionally researchers at Microsoft recently published a paper demonstrating gender-based job title bias in the general public's vernacular, implying that using job title as a proxy for success potentially introduces bias into an experiment. [^28]  Ultimately, professions each carry their own reputation and predefined characteristics and controlling for that would be exceptionally difficult. Additionally, the novelty effect for women and men in unconventional roles also raised some concerns. Cross comparing average salary data from the Occupation Employment Statistics Survey and the Current Population Survey reveal that top paying professions are male dominated. For example, the Bureau of Labor Statistics data shows that 66% of dentists, 64% of lawyers, and 73% of CEOs are men.[^26] [^27] Meaning that any high paying job selected would be more common among male profiles than female profiles making an apples to apples cross gender comparison questionable. For these reasons, job title was disregarded as the the final success proxy.
 
-[^25]: https://www.bls.gov/oes/tables.htm
-[^26]: https://www.bls.gov/cps/tables.htm
-[^27]: Bolukbasi, 2016
+[^26]: https://www.bls.gov/oes/tables.htm
+[^27]: https://www.bls.gov/cps/tables.htm
+[^28]: Bolukbasi, 2016
 
 The government and society have created very clear breaks in educational attainment that are known to all, uniform across geographic lines, and would be easy to administer for an experiment. Generally people perceive access to education in the United States as exceptionally balanced across gender, and bias concerns are mitigated. As the graph below indicates, on average there is a positive association between higher education and income levels, providing some validation for the positive life impact.  After deciding to run the experiment with educational attainment as the measure of success, the degrees of treatment were identified as MD, BS, and PhD. The research team was particularly interested in the difference between the impact of having a Medical Degree versus having a Research Degree. Both degrees require about five years to obtain, however there is significant difference in expected earnings. Due to concerns regarding the realness of the profile and limited time, the team decided not to test the impact of the associate's degree because other profiles on Tinder did not prominently display an associate's degree. The control group would be a profile giving no information for the particular success measure. The treatments were delivered in the following non-monotonic order: MD, BS, no education, and PhD. 
 
@@ -275,7 +278,7 @@ df_treatments <- within(df_treatments,
 
  #Plot visual -cnt
  ggplot(data = df_treatments, aes(x=degree, y = salary)) +
-   ggtitle(label="Salary by Education Level")+
+   ggtitle(label="Fig. 3.1: Salary by Education Level")+
    geom_bar(stat = "identity", fill ='slategray2') +
    #geom_text(aes(label = format(salary, big.mark = ","), y = salary +400)) +
    scale_x_discrete(labels =function(degree) str_wrap(degree, width = 5)) +
@@ -291,7 +294,7 @@ df_treatments <- within(df_treatments,
 
 ```
 
-The potential suitors were shown a profile that either read: "MD", "PhD", "BS" or the field to provide education information was left blank. A sample real profile can be seen below; along with an overview of the male and female profiles used in the experiment .
+The potential suitors were shown a profile that either read: "MD", "PhD", "BS" or the field to provide education information was left blank. A sample real profile can be seen below; along with an overview of the male and female profiles used in the experiment.
 
 ```{r, echo = FALSE}
 img <- readPNG("sample_profile.png")
@@ -308,7 +311,7 @@ grid.raster(f_img)
 
 
 # Measurement of Variables
-As discussed previously, the treatment in this experiment is the test profile's exposure of a given education level to a potential suitor, and the outcome is whether or not the suitor matches with the test profile.  When applying an education level treatment to the test profile, the measured test subject covariates include its age, sex, and location, and the measured suitor covariates include age, sex, whether or not school information is provided, whether or not job information is provided, and whether or not instagram photos are provided (and their count, if so).  These variables are described in table \textbf{XX} below.
+As discussed previously, the treatment in this experiment is the test profile's exposure of a given education level to a potential suitor, and the outcome is whether or not the suitor matches with the test profile.  When applying an education level treatment to the test profile, the measured test subject covariates include its age, sex, and location, and the measured suitor covariates include age, sex, whether or not school information is provided, whether or not job information is provided, and whether or not instagram photos are provided (and their count, if so).  These variables are described in Table 3 below.
 
 ```{r, echo = FALSE, message=FALSE, results="asis"}
 #(kalvin) i tried to use kable and kableExtra to format the table, but i'm having trouble using kableExtra
@@ -335,7 +338,7 @@ description <- c("4 possible values*: No education listed (control), Bachelor's,
 variables_table <- matrix(c(variables, variable_type, source, description), nrow=length(variables))
 #variables_table.app <- cbind(variables_table, source)
 colnames(variables_table) <- column_names
-print(xtable(variables_table, digits=c(0,0,2,2,2)), type="latex")
+print(xtable(variables_table, digits=c(0,0,2,2,2), caption = 'Variable Descriptions'),caption.placement = 'top', type="latex")
 ```
 
 \* The initial experimental plan also included the 'Associates' education level as a treatment condition (see Section 4 for further details).
@@ -372,7 +375,7 @@ df$ig_indicator <- 1.0*(!is.na(df$num_ig))
 
 ### Missing Instagram Information
 
-Like school and job information, instagram information was missing from many of our suitor profiles.  However, it was easily detected when present in the source code since the format for an instagram detail was consistent across suitor profiles (of the form "X Instagram Photos").  One technical detail of the structure of suitor source codes is that school and job information took priority-- an instagram detail is only present when less than two school or job details are present.  Therefore, whether or not a profile's source code contains an instagram detail could be used to represent the amount of information a suitor chose to include in his or her profile-- the missingness of instagram details is thus examined across experimental conditions.  Table XXX below shows the count of profiles with instagram information detected between the male and female test profiles.
+Like school and job information, instagram information was missing from many of our suitor profiles.  However, it was easily detected when present in the source code since the format for an instagram detail was consistent across suitor profiles (of the form "X Instagram Photos").  One technical detail of the structure of suitor source codes is that school and job information took priority-- an instagram detail is only present when less than two school or job details are present.  Therefore, whether or not a profile's source code contains an instagram detail could be used to represent the amount of information a suitor chose to include in his or her profile-- the missingness of instagram details is thus examined across experimental conditions.  Table 4 below shows the count of profiles with instagram information detected between the male and female test profiles.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 missing.ig.female <- 100*(1-mean(df$ig_indicator[df$female==1]))
@@ -390,7 +393,7 @@ column.3 <- c(num.ig.female, num.ig.male)
 column.4 <- c(missing.ig.female, missing.ig.male)
 missing.ig.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.ig.table) <- column.names
-print(xtable(missing.ig.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.ig.table, digits=c(0,0,2,2,2), caption = 'Profile Instagram Data by Sex'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -399,7 +402,7 @@ ig.gender.summary <- robustSEs(ig.gender)
 ig.gender.SEs <- c(ig.gender.summary[3], ig.gender.summary[4])
 ```
 
-Table XXX below shows the count of profiles with instagram information detected between all treatment conditions.
+Table 5 below shows the count of profiles with instagram information detected between all treatment conditions.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 missing.ig.noedu <- 100*(1-mean(df$ig_indicator[df$noedu==1]))
@@ -422,7 +425,7 @@ column.3 <- c(num.ig.noedu, num.ig.bs, num.ig.md, num.ig.phd)
 column.4 <- c(missing.ig.noedu, missing.ig.bs, missing.ig.md, missing.ig.phd)
 missing.ig.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.ig.table) <- column.names
-print(xtable(missing.ig.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.ig.table, digits=c(0,0,2,2,2), caption = 'Profile Instagram Data by Treatment Condition'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -431,7 +434,7 @@ ig.treatment.summary <- robustSEs(ig.treatment)
 ig.treatment.SEs <- c(ig.treatment.summary[5], ig.treatment.summary[6], ig.treatment.summary[7], ig.treatment.summary[8])
 ```
 
-Table XXX below shows the count of profiles with instagram information detected between all testing locations.
+Table 6 below shows the count of profiles with instagram information detected between all testing locations.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 missing.ig.chicago <- 100*(1-mean(df$ig_indicator[df$chicago==1]))
@@ -470,7 +473,7 @@ column.4 <- c(missing.ig.chicago, missing.ig.houston, missing.ig.losangeles, mis
 
 missing.ig.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.ig.table) <- column.names
-print(xtable(missing.ig.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.ig.table, digits=c(0,0,2,2,2), caption = 'Profile Instagram Data by City'),caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -479,16 +482,16 @@ ig.city.summary <- robustSEs(ig.city)
 ig.city.SEs <- c(ig.city.summary[9], ig.city.summary[10], ig.city.summary[11], ig.city.summary[12], ig.city.summary[13], ig.city.summary[14], ig.city.summary[15], ig.city.summary[16])
 ```
 
-Table XXX below shows the results of the tests for a difference in average missingness of instagram information, by gender, treatment condition, and location.  While some differences are statistically significant, we do not consider them practically significant-- the missingess of instagram information seems to be balanced across test conditions.
+Table 7 below shows the results of the tests for a difference in average missingness of instagram information, by gender, treatment condition, and location.  While some differences are statistically significant, we do not consider them practically significant-- the missingess of instagram information seems to be balanced across test conditions.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
-stargazer(ig.gender.summary, ig.treatment.summary,ig.city.summary, se=list(ig.gender.SEs, ig.treatment.SEs, ig.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of IG Missingness")
+stargazer(ig.gender.summary, ig.treatment.summary,ig.city.summary, se=list(ig.gender.SEs, ig.treatment.SEs, ig.city.SEs), type = "latex", report = "vcs*", header = FALSE, single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of IG Missingness")
 #cat("\n\n\\pagebreak\n")
 ```
 
 ### Missing Age Values
 
-Table XXX below shows the count of profiles that contain the suitor's age, between males and females.
+Table 8 below shows the count of profiles that contain the suitor's age, between males and females.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 missing.age.female <- 100*(1-mean(df$age_indicator[df$female==1]))
@@ -506,7 +509,7 @@ column.3 <- c(num.age.female, num.age.male)
 column.4 <- c(missing.age.female, missing.age.male)
 missing.age.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.age.table) <- column.names
-print(xtable(missing.age.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.age.table, digits=c(0,0,2,2,2), caption = 'Profile Age Data by Sex'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -515,7 +518,7 @@ age.gender.summary <- robustSEs(age.gender)
 age.gender.SEs <- c(age.gender.summary[3], age.gender.summary[4])
 ```
 
-Table XXX below shows the count of profiles that contain the suitor's age, between all treatment conditions.
+Table 10 below shows the count of profiles that contain the suitor's age, between all treatment conditions.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 missing.age.noedu <- 100*(1-mean(df$age_indicator[df$noedu==1]))
@@ -538,7 +541,7 @@ column.3 <- c(num.age.noedu, num.age.bs, num.age.md, num.age.phd)
 column.4 <- c(missing.age.noedu, missing.age.bs, missing.age.md, missing.age.phd)
 missing.age.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.age.table) <- column.names
-print(xtable(missing.age.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.age.table, digits=c(0,0,2,2,2), caption = 'Profiles Missing Age Data by Education Level'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -547,7 +550,7 @@ age.treatment.summary <- robustSEs(age.treatment)
 age.treatment.SEs <- c(age.treatment.summary[5], age.treatment.summary[6], age.treatment.summary[7], age.treatment.summary[8])
 ```
 
-Table XXX below shows the count of profiles that contain the suitor's age, between all testing locations.
+Table 11 below shows the count of profiles that contain the suitor's age, between all testing locations.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
 missing.age.chicago <- 100*(1-mean(df$age_indicator[df$chicago==1]))
@@ -586,7 +589,7 @@ column.4 <- c(missing.age.chicago, missing.age.houston, missing.age.losangeles, 
 
 missing.age.table <- matrix(c(column.1, column.2, column.3, column.4), nrow=length(column.1))
 colnames(missing.age.table) <- column.names
-print(xtable(missing.age.table, digits=c(0,0,2,2,2)), type="latex")#setting decimal places doesn't seem to be working
+print(xtable(missing.age.table, digits=c(0,0,2,2,2), caption = 'Profiles Missing Age Data by City'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r echo=FALSE, message=FALSE}
@@ -595,10 +598,10 @@ age.city.summary <- robustSEs(age.city)
 age.city.SEs <- c(age.city.summary[9], age.city.summary[10], age.city.summary[11], age.city.summary[12], age.city.summary[13], age.city.summary[14], age.city.summary[15], age.city.summary[16])
 ```
 
-Table XXX below shows the results of the tests for a difference in average missingness of the suitor's age, by gender, treatment condition, and location.  While some differences are statistically significant (between males and females, for example), we do not consider them practically significant.  It appears that the missingess of age information is also balanced across test conditions.
+Table 11 below shows the results of the tests for a difference in average missingness of the suitor's age, by gender, treatment condition, and location.  While some differences are statistically significant (between males and females, for example), we do not consider them practically significant.  It appears that the missingess of age information is also balanced across test conditions.
 
 ```{r results="asis", echo=FALSE, message=FALSE}
-stargazer(age.gender.summary, age.treatment.summary,age.city.summary, se=list(age.gender.SEs, age.treatment.SEs, age.city.SEs), type = "latex", report = "vcs*", single.row = T, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of Age Missingness")
+stargazer(age.gender.summary, age.treatment.summary,age.city.summary,  se=list(age.gender.SEs, age.treatment.SEs, age.city.SEs), type = "latex", report = "vcs*", single.row = T,header = FALSE, column.labels = c("Gender","Treatment", "Location"), title ="Comparison of Age Missingness")
 #cat("\n\n\\pagebreak\n")
 ```
 
@@ -635,7 +638,7 @@ column.3 <- c(sum(df$Matched[df$female==0], na.rm=TRUE), sum(df$female==0))
 
 gender.match.table <- matrix(c(column.1, column.2, column.3), nrow=length(column.1))
 colnames(gender.match.table) <- column.names
-print(xtable(gender.match.table), type="latex")#setting decimal places doesn't seem to be working
+print(xtable(gender.match.table,caption = 'Profile Matches by Sex'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 
 ```{r, echo = FALSE}
@@ -657,7 +660,7 @@ column.5 <- c(sum(df$Matched[df$phd==1], na.rm=TRUE), sum(df$phd==1))
 
 treatment.match.table <- matrix(c(column.1, column.2, column.3, column.4, column.5), nrow=length(column.1))
 colnames(treatment.match.table) <- column.names
-print(xtable(treatment.match.table), type="latex")#setting decimal places doesn't seem to be working
+print(xtable(treatment.match.table, 'Profile Matches by Education'), caption.placement = 'top', type="latex")#setting decimal places doesn't seem to be working
 ```
 Before building sophisticated models, the research team paused to consider the power of the experiment. While the delta between the treatment and control means was very small, the large sample size engenders a high powered experiment. 
 
@@ -729,7 +732,7 @@ model_details2 = coeftest(model_details, vcov = vcovHC)
 model_all = lm(Matched ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female)
 model_all2 = coeftest(model_all, vcov = vcovHC)
 #Change type to "latex" for knitting to pdf or text for R viewing
-stargazer(model_gender2, model_age2, model_location2, model_details2, model_all2,type = "latex", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+stargazer(model_gender2, model_age2, model_location2, model_details2, model_all2,type = "latex", report = "vcs*", single.row = T, header = FALSE, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
 ## Logistic Regression:
@@ -777,7 +780,7 @@ Lmodel_details = glm(Matched ~ md + bs + phd  +  school + job, data = df_female,
 #all
 Lmodel_all = glm(Matched ~ md + bs + phd  +  age + losangeles + houston + newyork + phoenix + sandiego +sanantonio +philadelphia +  school + job  , data = df_female, family = "binomial")
 #Change type to "latex" for knitting to pdf
-stargazer(Lmodel_gender, Lmodel_age, Lmodel_location, Lmodel_details, Lmodel_all,type = "latex", report = "vcs*", single.row = T, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
+stargazer(Lmodel_gender, Lmodel_age, Lmodel_location, Lmodel_details, Lmodel_all,type = "latex", report = "vcs*", single.row = T, header = FALSE, column.labels = c("Base","Age", "Location", "Details", "All"), title ="Comparison of treatments")
 #cat("\n\n\\pagebreak\n")
 ```
 
@@ -1035,7 +1038,7 @@ combined.md.outcomes <- c(o.chicago.f.noedu, o.chicago.f.md, o.chicago.m.noedu, 
 combined.phd.outcomes <- c(o.chicago.f.noedu, o.chicago.f.phd, o.chicago.m.noedu, o.chicago.m.phd, o.houston.f.noedu, o.houston.f.phd, o.houston.m.noedu, o.houston.m.phd, o.losangeles.f.noedu, o.losangeles.f.phd, o.losangeles.m.noedu, o.losangeles.m.phd, o.newyork.f.noedu, o.newyork.f.phd, o.newyork.m.noedu, o.newyork.m.phd, o.philadelphia.f.noedu, o.philadelphia.f.phd, o.philadelphia.m.noedu, o.philadelphia.m.phd, o.phoenix.f.noedu, o.phoenix.f.phd, o.phoenix.m.noedu, o.phoenix.m.phd, o.sanantonio.f.noedu, o.sanantonio.f.phd, o.sanantonio.m.noedu, o.sanantonio.m.phd, o.sandiego.f.noedu, o.sandiego.f.phd, o.sandiego.m.noedu, o.sandiego.m.phd)
 ```
 
-Figures XXX-XXX show the distribution of the ATE (for each treatment) under the sharp null hypothesis, with a vertical line indicating the actual ATE estimate observed in the experiment.  The percentage of ATEs from simulation that are at least as extreme as the observed ATE is the p-value under randomization inference.
+Figures 4.1-4.3 show the distribution of the ATE (for each treatment) under the sharp null hypothesis, with a vertical line indicating the actual ATE estimate observed in the experiment.  The percentage of ATEs from simulation that are at least as extreme as the observed ATE is the p-value under randomization inference.
 
 ```{r echo=FALSE, message=FALSE}
 distribution.under.sharp.null.bs <- replicate(10000, est.ate(combined.bs.outcomes, bs.randomization()))
@@ -1055,7 +1058,7 @@ md.ate <- mean(df.ri$Matched[df.ri$md==1]) - mean(df.ri$Matched[df.ri$noedu==1])
 md.pvalue <- mean(md.ate < distribution.under.sharp.null.md)
 ```
 
-Figure XXX shows the distribution of ATE of the MD treatment under the sharp null hypothesis
+Figure 4.2 shows the distribution of ATE of the MD treatment under the sharp null hypothesis
 
 ```{r echo=FALSE, message=FALSE}
 distribution.under.sharp.null.phd <- replicate(10000, est.ate(combined.phd.outcomes, phd.randomization()))
@@ -1068,11 +1071,11 @@ phd.pvalue <- mean(phd.ate < distribution.under.sharp.null.phd)
 
 ```{r echo=FALSE, message=FALSE, fig.width=11, fig.height=4}
 par(mfrow = c(1,3))
-plot(density(distribution.under.sharp.null.bs), col="red", main="ATE Distribution Under the Sharp Null (BS)", xlab="ATE")
+plot(density(distribution.under.sharp.null.bs), col="red", main="Fig. 4.1: ATE Distribution Under the Sharp Null (BS)", xlab="ATE")
 abline(v=bs.ate)
-plot(density(distribution.under.sharp.null.md), col="red", main="ATE Distribution Under the Sharp Null (MD)", xlab="ATE")
+plot(density(distribution.under.sharp.null.md), col="red", main="Fig. 4.2: ATE Distribution Under the Sharp Null (MD)", xlab="ATE")
 abline(v=md.ate)
-plot(density(distribution.under.sharp.null.phd), col="red", main="ATE Distribution Under the Sharp Null (PhD)", xlab="ATE")
+plot(density(distribution.under.sharp.null.phd), col="red", main="Fig. 4.3: ATE Distribution Under the Sharp Null (PhD)", xlab="ATE")
 abline(v=phd.ate)
 ```
 
@@ -1090,6 +1093,7 @@ To improve the generalizability of these results, we would seek to also test thi
 
 
 \pagebreak
+
 \section{Works Consulted}
 
 "FAQ: How Do I Interpret Odds Ratios in Logistic Regression?" IDRE Stats, stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-how-do-i-interpret-odds-ratios-in-logistic-regression/.
